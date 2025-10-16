@@ -28,5 +28,5 @@ loginButton.addEventListener("click", () => {
                 console.log("not found")
             }
         })
-        .catch(err => console.error('Error fetching users:', err));
+        .catch(err => console.error('error fetching users:', err));
 })
