@@ -46,9 +46,20 @@
             <h2>Create an Account</h2>
             <p class="txt">Already have an account? <button class="loginPageBtn">Log in</button></p>
             <form class="signupForm">
-                <input class="username" type="text" placeholder="Username" required>
-                <input class="email" type="email" placeholder="Email" required>
-                <input class="password" type="password" placeholder="Password" required>
+                <div class="input-group">
+                    <i class="bi bi-person"></i>
+                    <input class="username" type="text" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="bi bi-envelope"></i>
+                    <input class="email" type="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="bi bi-lock"></i>
+                    <input class="password" type="password" placeholder="Password" required>
+                    <i class="bi-eye bi show-pass"></i>
+                    <i class="bi-eye-slash bi hide-pass"></i>
+                </div>
                 <p class="error"></p>
                 <button class="btn-17 signupBtn">
                     <span class="text-container">

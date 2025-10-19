@@ -212,7 +212,7 @@ input:hover {
     top: 12px;
     cursor: pointer;
 }
-.hide-pass{
+.show-pass{
     display: none;
 }
 form {

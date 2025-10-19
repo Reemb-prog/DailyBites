@@ -12,8 +12,9 @@ let username=document.querySelector(".username")
 let signPasswordInput = document.querySelector('.signup .password');
 let loginError =document.querySelector(".login .error")
 let signupError=document.querySelector(".signup .error")
-let showPass=document.querySelector(".show-pass")
-let hidePass=document.querySelector(".hide-pass")
+let showPass=document.querySelectorAll(".show-pass")
+let hidePass=document.querySelectorAll(".hide-pass")
+
 signpPageButton.addEventListener("click", () => {
     loginSection.style.display = "none"
     signUpSection.style.display = "flex"
@@ -63,11 +64,14 @@ signupForm.addEventListener("submit",(e)=>{
     window.location.href="../html/home.html"
 })
 
-showPass.addEventListener("click",()=>{
-    hidePass.style.display="block"
-    showPass.style.display="none"
-})
-hidePass.addEventListener("click",()=>{
-    showPass.style.display="block"
-    hidePass.style.display="none"
-})
+showPass.forEach(e=>e.addEventListener("click",(e)=>{
+    e.target.style.display="none"
+    e.target.nextElementSibling.style.display="block"
+    e.target.previousElementSibling.type="password"
+}))
+hidePass.forEach(e=>e.addEventListener("click",(e)=>{
+    e.target.style.display="none"
+    e.target.previousElementSibling.style.display="block"
+    e.target.previousElementSibling.previousElementSibling.type="text"
+
+}))
