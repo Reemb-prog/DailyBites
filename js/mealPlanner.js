@@ -1,7 +1,11 @@
 const navbar = document.getElementById('navbar');
 const toggle = document.getElementById('menu-toggle');
 const links = document.getElementById('primary-navigation');
-
+const closeBtn = document.querySelector(".close")
+closeBtn.addEventListener("click", () => {
+    overlay.style.display = "none";
+    document.querySelector("body").classList.remove("overlayOpen")
+})
 function setMenu(open) {
     if (!links || !toggle) return;
     links.classList.toggle('show', open);
@@ -48,21 +52,20 @@ const months = [
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
-
 let thisWeek = getThisWeek();
 const mealNames = ["Breakfast", "Lunch", "Dinner", "Notes"];
 const mealTypes = ["Breakfast", "Lunch", "Dinner", "Notes"];
 let prevIsMobile = window.innerWidth < 780;
-let recipes; 
+let recipes;
 const overlay = document.querySelector(".overlay");
 let searchInput = document.querySelector(".search");
 let recipesContainer = document.querySelector(".recipes");
 
 async function fetchAllRecipes() {
     try {
-        const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=`);
+        const res = await fetch(`../js/data.json`);
         const data = await res.json();
-        recipes = data;
+        recipes = data.recipes;
     } catch (err) {
         console.error('error fetching:', err);
     }
@@ -92,7 +95,7 @@ function renderLayout() {
 
         html += `</section>`;
     });
-    let cat=`<section class="categories">
+    let cat = `<section class="categories">
                 <div class="hidden">
                     <p>Monday</p>
                     <p>Oct 21</p>
@@ -102,12 +105,62 @@ function renderLayout() {
                 <div>Dinner</div>
                 <div>Notes</div>
             </section>`
-    main.innerHTML = cat+html;
+    main.innerHTML = cat + html;
 
     loadSavedMeals();
     setAddBtnListeners();
 }
 
+searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+
+    recipesContainer.innerHTML = "<p>Results</p>";
+
+    const filtered = !query.trim()
+        ? recipes
+        : recipes.filter(meal => meal.name.toLowerCase().includes(query));
+
+    if (!filtered || filtered.length === 0) {
+        recipesContainer.innerHTML += `<div>No recipes found</div>`;
+        return;
+    }
+
+    filtered.forEach(meal => {
+        recipesContainer.innerHTML += `<div class="recipe-item">${meal.name}</div>`;
+    });
+
+    attachRecipeClickListeners();
+});
+
+function attachRecipeClickListeners() {
+    const recipeDivs = recipesContainer.querySelectorAll(".recipe-item");
+
+    recipeDivs.forEach(recipeDiv => {
+        recipeDiv.addEventListener("click", () => {
+            const mealName = recipeDiv.textContent;
+            const openSection = document.querySelector("section.day-section.active-slot");
+            if (!openSection) return;
+
+            const day = openSection.getAttribute("data-day");
+            const mealDivs = Array.from(openSection.querySelectorAll(".meal-slot"));
+            const activeSlot = openSection.querySelector(".meal-slot.active");
+            const mealIndex = mealDivs.indexOf(activeSlot);
+            const mealType = mealTypes[mealIndex];
+
+            saveMeal(day, mealType, mealName);
+
+            overlay.style.display = "none";
+            document.querySelector("body").classList.remove("overlayOpen");
+            if (searchInput) searchInput.value = "";
+
+            document.querySelectorAll(".active-slot, .meal-slot.active").forEach(el =>
+                el.classList.remove("active-slot", "active")
+            );
+
+            loadSavedMeals();
+        });
+    });
+}
 
 function loadSavedMeals() {
     const saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
@@ -130,6 +183,7 @@ function loadSavedMeals() {
                 const label = isMobile ? `${mealNames[index]} +Add` : "+ Add";
                 div.innerHTML = `<button class="add"><span>${label}</span></button>`;
             }
+            setAddBtnListeners()
         });
     });
 
@@ -174,22 +228,29 @@ function setAddBtnListeners() {
             const section = e.target.closest("section.day-section");
             const day = section.getAttribute("data-day");
             const mealDivs = Array.from(section.querySelectorAll(".meal-slot"));
-            const mealIndex = mealDivs.indexOf(e.target.closest(".meal-slot"));
+            const mealSlot = e.target.closest(".meal-slot");
+            const mealIndex = mealDivs.indexOf(mealSlot);
             const mealType = mealTypes[mealIndex];
 
+            document.querySelectorAll(".active-slot, .meal-slot.active").forEach(el =>
+                el.classList.remove("active-slot", "active")
+            );
+            section.classList.add("active-slot");
+            mealSlot.classList.add("active");
+
             if (mealType === "Notes") {
-                openNoteModal(day, e.target.closest(".meal-slot"));
+                openNoteModal(day, mealSlot);
                 return;
             }
 
             overlay.style.display = "flex";
             recipesContainer.innerHTML = "<p>Results</p>";
             document.querySelector("body").classList.add("overlayOpen")
-            if (!recipes || !recipes.meals) {
+            if (!recipes) {
                 recipesContainer.innerHTML += `<div>Loading recipes...</div>`;
             } else {
-                recipes.meals.forEach(meal => {
-                    recipesContainer.innerHTML += `<div class="recipe-item">${meal.strMeal}</div>`;
+                recipes.forEach(meal => {
+                    recipesContainer.innerHTML += `<div class="recipe-item">${meal.name}</div>`;
                 });
             }
 
@@ -198,12 +259,13 @@ function setAddBtnListeners() {
                     const mealName = recipeDiv.textContent;
                     saveMeal(day, mealType, mealName);
 
-                    const targetDiv = e.target.closest(".meal-slot");
-                    targetDiv.innerHTML = `<p class="saved-meal">${mealName}</p>`;
-
                     overlay.style.display = "none";
                     document.querySelector("body").classList.remove("overlayOpen")
                     if (searchInput) searchInput.value = "";
+
+                    document.querySelectorAll(".active-slot, .meal-slot.active").forEach(el =>
+                        el.classList.remove("active-slot", "active")
+                    );
 
                     loadSavedMeals();
                 });
@@ -211,8 +273,6 @@ function setAddBtnListeners() {
         });
     });
 }
-
-
 
 function saveMeal(day, mealType, mealName) {
     const saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
@@ -264,6 +324,9 @@ overlay.addEventListener("click", (e) => {
         e.target.style.display = "none";
         document.querySelector("body").classList.remove("overlayOpen")
         if (searchInput) searchInput.value = "";
+        document.querySelectorAll(".active-slot, .meal-slot.active").forEach(el =>
+            el.classList.remove("active-slot", "active")
+        );
     }
 });
 
