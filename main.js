@@ -117,7 +117,7 @@ const overlayEl = document.getElementById('overlay')
 const modalEl   = document.getElementById('modal')
 const modalBody = modalEl ? modalEl.querySelector('.modal__body') : null
 
-export function openModal({ title = '', html = '' } = {}) {
+window.openModal = function openModal({ title = '', html = '' } = {}) {
   if (!overlayEl || !modalEl) return
   const titleEl = modalEl.querySelector('#modal-title')
   if (titleEl) titleEl.textContent = title
@@ -127,7 +127,7 @@ export function openModal({ title = '', html = '' } = {}) {
   document.body.classList.add('no-scroll')
 }
 
-export function closeModal() {
+window.closeModal = function closeModal() {
   if (!overlayEl || !modalEl) return
   overlayEl.classList.remove('is-open')
   modalEl.classList.remove('is-open')
@@ -142,5 +142,14 @@ modalEl?.addEventListener('click', (e) => {
 })
 
 // how to use in page.js:
-//import { openModal, closeModal } from './main.js' // or use window.openModal if bundling isn't used
 //openModal({ title: 'Add Note', html: '<form>...</form>' })
+
+// Sticky header elevation
+const navEl = document.querySelector('nav');
+function toggleNavShadow() {
+  if (!navEl) return;
+  const y = window.scrollY || window.pageYOffset;
+  navEl.classList.toggle('scrolled', y > 4);
+}
+toggleNavShadow();
+document.addEventListener('scroll', toggleNavShadow, { passive: true });

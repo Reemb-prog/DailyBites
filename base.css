@@ -218,12 +218,6 @@ nav .logo:hover .logo-mark {
     will-change: transform;
 }
 
-.nav-actions a.primary {
-    background: var(--logo);
-    color: #fff;
-    border-color: var(--logo);
-}
-
 .nav-actions a:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,.06); }
 .nav-actions a:active { transform: translateY(0); }
 .nav-actions a.primary { background: var(--logo); color: #fff; border-color: var(--logo); }
