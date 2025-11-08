@@ -1,15 +1,15 @@
-const hamburger = document.querySelector('.hamburger')
-const navLinks = document.querySelector('.nav-ltxts')
-const navActions = document.querySelector('.nav-actions')
-const breakpoint = 992
+let hamburger = document.querySelector('.hamburger')
+let navLinks = document.querySelector('.nav-ltxts')
+let navActions = document.querySelector('.nav-actions')
+let breakpoint = 992
 
 function toggleMenu() {
-    const isOpen = navLinks.classList.contains('open')
+    let isOpen = navLinks.classList.contains('open')
     // if (!isOpen) {
     //     navLinks.appendChild(navActions)
     // } else {
     //     // move back to normal place on close
-    //     const navRow = document.getElementById('nav-desc')
+    //     let navRow = document.getElementById('nav-desc')
     //     navRow.appendChild(navActions)
     // }
     // navLinks.classList.toggle('open')
@@ -38,7 +38,7 @@ function toggleMenu() {
 function closeMenu() {
     // navLinks.classList.remove('open')
     // document.body.classList.remove('no-scroll')
-    // const navRow = document.getElementById('nav-desc')
+    // let navRow = document.getElementById('nav-desc')
     // if (navActions.parentNode !== navRow) navRow.appendChild(navActions)
     // hamburger.setAttribute('aria-expanded', 'false')
       if (!navLinks.classList.contains('open')) return;
@@ -54,7 +54,7 @@ function closeMenu() {
         document.body.classList.remove('no-scroll');
 
         // move actions back after it fully closes
-        const navRow = document.getElementById('nav-desc');
+        let navRow = document.getElementById('nav-desc');
         if (navActions.parentNode !== navRow) navRow.appendChild(navActions);
     }, { once: true });
 }
@@ -78,18 +78,18 @@ document.addEventListener('keydown', (e) => {
 
 // Smooth scroll for same-page anchors across the site
 document.addEventListener('click', (e) => {
-  const a = e.target.closest('a[href^="#"]');
+  let a = e.target.closest('a[href^="#"]');
   if (!a) return;
-  const id = a.getAttribute('href');
+  let id = a.getAttribute('href');
   if (!id || id === '#') return;
-  const el = document.querySelector(id);
+  let el = document.querySelector(id);
   if (!el) return;
   e.preventDefault();
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
 // Intersection-based reveal utility
-const revealObserver = new IntersectionObserver((entries) => {
+let revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((en) => {
     if (en.isIntersecting) {
       en.target.classList.add('is-inview');
@@ -113,13 +113,13 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 //   </div>
 // </div>
 
-const overlayEl = document.getElementById('overlay')
-const modalEl   = document.getElementById('modal')
-const modalBody = modalEl ? modalEl.querySelector('.modal__body') : null
+let overlayEl = document.getElementById('overlay')
+let modalEl   = document.getElementById('modal')
+let modalBody = modalEl ? modalEl.querySelector('.modal__body') : null
 
 window.openModal = function openModal({ title = '', html = '' } = {}) {
   if (!overlayEl || !modalEl) return
-  const titleEl = modalEl.querySelector('#modal-title')
+  let titleEl = modalEl.querySelector('#modal-title')
   if (titleEl) titleEl.textContent = title
   if (modalBody) modalBody.innerHTML = html
   overlayEl.classList.add('is-open')
@@ -145,10 +145,10 @@ modalEl?.addEventListener('click', (e) => {
 //openModal({ title: 'Add Note', html: '<form>...</form>' })
 
 // Sticky header elevation
-const navEl = document.querySelector('nav');
+let navEl = document.querySelector('nav');
 function toggleNavShadow() {
   if (!navEl) return;
-  const y = window.scrollY || window.pageYOffset;
+  let y = window.scrollY || window.pageYOffset;
   navEl.classList.toggle('scrolled', y > 4);
 }
 toggleNavShadow();
