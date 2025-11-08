@@ -56,6 +56,75 @@ main {
     flex: 1 1 auto; 
 }
 
+/* ===== Cards ===== */
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.03);
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  border: 1px solid var(--line);
+  padding: 9px 14px; border-radius: 10px;
+  transition: transform var(--dur-sm) var(--ease), box-shadow var(--dur-sm) var(--ease), background var(--dur-sm) var(--ease);
+  cursor: pointer; text-decoration: none; color: inherit; background: #fff;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,.06); }
+.btn:active { transform: translateY(0); }
+.btn.primary { background: var(--logo); color: #fff; border-color: var(--logo); }
+.btn.ghost { background: transparent; }
+.btn.lg { padding: 12px 18px; border-radius: 12px; font-weight: 600; }
+
+/* ===== Pills / tags ===== */
+.pill {
+  display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius: 999px;
+  background:#eef2ff; color:#111827; font-size:.9rem; border:1px solid #e5e7eb;
+}
+
+/* ===== Inputs ===== */
+.input, input[type="text"], input[type="email"], input[type="password"], textarea, select {
+  width: 100%; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--line); background: #fff; font: inherit; color: var(--txt);
+}
+.input::placeholder { color: #9aa3af; }
+.input:focus, input:focus, textarea:focus, select:focus {
+  outline: none; border-color: var(--logo); box-shadow: 0 0 0 3px color-mix(in srgb, var(--logo) 18%, transparent);
+}
+
+/* Input group with leading icon */
+.input-group { position: relative; }
+.input-group .icon { position: absolute; inset: 0 auto 0 10px; display:flex; align-items:center; pointer-events:none; }
+.input-group .input { padding-left: 36px; }
+
+
+/* ===== Modal system ===== */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.35);
+  display: none; z-index: 1200;
+}
+.overlay.is-open { display: block; animation: fade-in var(--dur-md) var(--ease) both; }
+
+.modal {
+  position: fixed; inset: 0; display: grid; place-items: center; z-index: 1201; pointer-events: none;
+}
+.modal.is-open { pointer-events: auto; }
+.modal__panel {
+  width: min(680px, 92vw); max-height: 86vh; overflow: auto;
+  background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px;
+  animation: panel-in var(--dur-md) var(--ease) both;
+}
+.modal__header { display:flex; align-items:center; justify-content:space-between; gap: 8px; margin-bottom: 12px; }
+.modal__close { border: 0; background: transparent; font-size: 24px; line-height: 1; cursor: pointer; }
+
+/* keyframes */
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes panel-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+
 /* nav */
 nav .wrap, footer .wrap {
     max-width: clamp(1040px, 92vw, 1320px);
@@ -314,8 +383,24 @@ footer .logo {
 .hamburger.open-anim { animation: hb-pop var(--dur-md) var(--ease); }
 
 /* reveal animation utility any section can use */
-.reveal { opacity:0; transform: translateY(12px); transition: opacity var(--dur-md) var(--ease), transform var(--dur-md) var(--ease); }
-.reveal.is-inview { opacity:1; transform: none; }
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity var(--dur-md) var(--ease), transform var(--dur-md) var(--ease); }
+.reveal.is-inview { opacity: 1; transform: none; }
+
+
+/* ===== Section shells (used by Home & About) ===== */
+.section { padding-block: clamp(32px, 6vh, 64px); }
+.section--light { background: #f8fafc; }
+.section--brand { background: var(--logo); color: #fff; }
+
+/* Make in-page anchors not hide under sticky nav */
+section[id] { scroll-margin-top: 84px; }
+
+.grid-fluid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: clamp(12px, 4vw, 20px); }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+@media (max-width: 900px){ .grid-2 { grid-template-columns: 1fr; } }
+
+.cluster { display:flex; flex-wrap:wrap; align-items:center; gap: 12px; }
+
 
 /* scroll bar - aka - reem's signature move */
 ::-webkit-scrollbar {

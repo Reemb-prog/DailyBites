@@ -76,25 +76,71 @@ document.addEventListener('keydown', (e) => {
   }
 })
 
-// Smooth scroll for same-page anchors
+// Smooth scroll for same-page anchors across the site
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
   const id = a.getAttribute('href');
-  const el = id.length > 1 && document.querySelector(id);
+  if (!id || id === '#') return;
+  const el = document.querySelector(id);
   if (!el) return;
   e.preventDefault();
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
-// Intersection-based reveal for .reveal 
-const io = new IntersectionObserver((entries) => {
+// Intersection-based reveal utility
+const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((en) => {
     if (en.isIntersecting) {
       en.target.classList.add('is-inview');
-      io.unobserve(en.target);
+      revealObserver.unobserve(en.target);
     }
   });
 }, { threshold: 0.08 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
+
+// ===== Modal System =====
+// Expected HTML:
+// <div class="overlay" id="overlay"></div>
+// <div class="modal" id="modal">
+//   <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+//     <div class="modal__header">
+//       <h3 id="modal-title">Title</h3>
+//       <button class="modal__close" aria-label="Close">&times;</button>
+//     </div>
+//     <div class="modal__body"></div>
+//   </div>
+// </div>
+
+const overlayEl = document.getElementById('overlay')
+const modalEl   = document.getElementById('modal')
+const modalBody = modalEl ? modalEl.querySelector('.modal__body') : null
+
+export function openModal({ title = '', html = '' } = {}) {
+  if (!overlayEl || !modalEl) return
+  const titleEl = modalEl.querySelector('#modal-title')
+  if (titleEl) titleEl.textContent = title
+  if (modalBody) modalBody.innerHTML = html
+  overlayEl.classList.add('is-open')
+  modalEl.classList.add('is-open')
+  document.body.classList.add('no-scroll')
+}
+
+export function closeModal() {
+  if (!overlayEl || !modalEl) return
+  overlayEl.classList.remove('is-open')
+  modalEl.classList.remove('is-open')
+  document.body.classList.remove('no-scroll')
+}
+
+// Close on ESC and backdrop
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal() })
+overlayEl?.addEventListener('click', closeModal)
+modalEl?.addEventListener('click', (e) => {
+  if (e.target.closest('.modal__close')) closeModal()
+})
+
+// how to use in page.js:
+//import { openModal, closeModal } from './main.js' // or use window.openModal if bundling isn't used
+//openModal({ title: 'Add Note', html: '<form>...</form>' })
