@@ -1,7 +1,7 @@
-const navbar = document.getElementById('navbar');
-const toggle = document.getElementById('menu-toggle');
-const links = document.getElementById('primary-navigation');
-const closeBtn = document.querySelector(".close")
+let navbar = document.getElementById('navbar');
+let toggle = document.getElementById('menu-toggle');
+let links = document.getElementById('primary-navigation');
+let closeBtn = document.querySelector(".close")
 closeBtn.addEventListener("click", () => {
     overlay.style.display = "none";
     document.querySelector("body").classList.remove("overlayOpen")
@@ -46,39 +46,35 @@ function getThisWeek() {
     return week;
 }
 
-const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const months = [
+let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+let months = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
 let thisWeek = getThisWeek();
-const mealNames = ["Breakfast", "Lunch", "Dinner", "Notes"];
-const mealTypes = ["Breakfast", "Lunch", "Dinner", "Notes"];
+let mealNames = ["Breakfast", "Lunch", "Dinner", "Notes"];
 let prevIsMobile = window.innerWidth < 780;
 let recipes;
-const overlay = document.querySelector(".overlay");
+let overlay = document.querySelector(".overlay");
 let searchInput = document.querySelector(".search");
 let recipesContainer = document.querySelector(".recipes");
 
-async function fetchAllRecipes() {
-    try {
-        const res = await fetch(`../js/data.json`);
-        const data = await res.json();
-        recipes = data.recipes;
-    } catch (err) {
-        console.error('error fetching:', err);
-    }
+function fetchAllRecipes() {
+    fetch("../js/data.json")
+        .then(res => res.json())
+        .then(data => recipes = data.recipes)
+        .catch(()=>console.error('error fetching'))
 }
 fetchAllRecipes();
 
 function renderLayout() {
-    const isMobile = window.innerWidth < 780;
+    let isMobile = window.innerWidth < 780;
     let html = "";
 
     thisWeek.forEach(d => {
-        const dayName = days[d.getDay()];
-        const dateLabel = `${months[d.getMonth()]} ${d.getDate()}`;
+        let dayName = days[d.getDay()];
+        let dateLabel = `${months[d.getMonth()]} ${d.getDate()}`;
 
         html += `<section class="day-section" data-day="${dayName}">
       <div class="day-info">
@@ -87,7 +83,7 @@ function renderLayout() {
       </div>`;
 
         for (let i = 0; i < mealNames.length; i++) {
-            const label = isMobile ? `${mealNames[i]} +Add` : "+ Add";
+            let label = isMobile ? `${mealNames[i]} +Add` : "+ Add";
             html += `<div class="meal-slot">
         <button class="add"><span>${label}</span></button>
       </div>`;
@@ -112,13 +108,10 @@ function renderLayout() {
 }
 
 searchInput.addEventListener("input", () => {
-    const query = searchInput.value.toLowerCase();
-
+    let query = searchInput.value.toLowerCase();
     recipesContainer.innerHTML = "<p>Results</p>";
 
-    const filtered = !query.trim()
-        ? recipes
-        : recipes.filter(meal => meal.name.toLowerCase().includes(query));
+    let filtered = !query.trim() ? recipes : recipes.filter(meal => meal.name.toLowerCase().includes(query));
 
     if (!filtered || filtered.length === 0) {
         recipesContainer.innerHTML += `<div>No recipes found</div>`;
@@ -133,19 +126,19 @@ searchInput.addEventListener("input", () => {
 });
 
 function attachRecipeClickListeners() {
-    const recipeDivs = recipesContainer.querySelectorAll(".recipe-item");
+    let recipeDivs = recipesContainer.querySelectorAll(".recipe-item");
 
     recipeDivs.forEach(recipeDiv => {
         recipeDiv.addEventListener("click", () => {
-            const mealName = recipeDiv.textContent;
-            const openSection = document.querySelector("section.day-section.active-slot");
+            let mealName = recipeDiv.textContent;
+            let openSection = document.querySelector("section.day-section.active-slot");
             if (!openSection) return;
 
-            const day = openSection.getAttribute("data-day");
-            const mealDivs = Array.from(openSection.querySelectorAll(".meal-slot"));
-            const activeSlot = openSection.querySelector(".meal-slot.active");
-            const mealIndex = mealDivs.indexOf(activeSlot);
-            const mealType = mealTypes[mealIndex];
+            let day = openSection.getAttribute("data-day");
+            let mealDivs = Array.from(openSection.querySelectorAll(".meal-slot"));
+            let activeSlot = openSection.querySelector(".meal-slot.active");
+            let mealIndex = mealDivs.indexOf(activeSlot);
+            let mealType = mealNames[mealIndex];
 
             saveMeal(day, mealType, mealName);
 
@@ -163,41 +156,36 @@ function attachRecipeClickListeners() {
 }
 
 function loadSavedMeals() {
-    const saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
+    let saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
 
-    const sections = document.querySelectorAll("main section.day-section");
+    let sections = document.querySelectorAll("main section.day-section");
 
     sections.forEach(section => {
-        const day = section.getAttribute("data-day");
-        const mealDivs = section.querySelectorAll(".meal-slot");
+        let day = section.getAttribute("data-day");
+        let mealDivs = section.querySelectorAll(".meal-slot");
 
         mealDivs.forEach((div, index) => {
-            const mealType = mealTypes[index];
-            const key = `${day}-${mealType}`;
-            const savedMeal = saved[key];
+            let mealType = mealNames[index];
+            let key = `${day}-${mealType}`;
+            let savedMeal = saved[key];
 
             if (savedMeal) {
                 div.innerHTML = `<p class="saved-meal">${savedMeal}</p>`;
-            } else {
-                const isMobile = window.innerWidth < 780;
-                const label = isMobile ? `${mealNames[index]} +Add` : "+ Add";
-                div.innerHTML = `<button class="add"><span>${label}</span></button>`;
-            }
-            setAddBtnListeners()
+            } 
         });
     });
 
     document.querySelectorAll(".saved-meal").forEach(mealEl => {
-        const parent = mealEl.parentElement;
-        const newNode = mealEl.cloneNode(true);
+        let parent = mealEl.parentElement;
+        let newNode = mealEl.cloneNode(true);
         parent.replaceChild(newNode, mealEl);
 
         newNode.addEventListener("click", (e) => {
-            const section = e.target.closest("section.day-section");
-            const day = section.getAttribute("data-day");
-            const mealDivs = Array.from(section.querySelectorAll(".meal-slot"));
-            const mealIndex = mealDivs.indexOf(newNode.parentElement);
-            const mealType = mealTypes[mealIndex];
+            let section = e.target.closest("section.day-section");
+            let day = section.getAttribute("data-day");
+            let mealDivs = Array.from(section.querySelectorAll(".meal-slot"));
+            let mealIndex = mealDivs.indexOf(newNode.parentElement);
+            let mealType = mealNames[mealIndex];
 
             if (mealType === "Notes") {
                 openNoteModal(day, newNode.parentElement);
@@ -206,8 +194,8 @@ function loadSavedMeals() {
 
             if (confirm("Remove this recipe?")) {
                 removeMeal(day, mealType);
-                const isMobile = window.innerWidth < 780;
-                const label = isMobile ? `${mealNames[mealIndex]} +Add` : "+ Add";
+                let isMobile = window.innerWidth < 780;
+                let label = isMobile ? `${mealNames[mealIndex]} +Add` : "+ Add";
                 newNode.parentElement.innerHTML = `<button class="add"><span>${label}</span></button>`;
                 setAddBtnListeners();
             }
@@ -216,21 +204,20 @@ function loadSavedMeals() {
 }
 
 function setAddBtnListeners() {
-    const addButtons = document.querySelectorAll("button.add");
+    let addButtons = document.querySelectorAll("button.add");
 
     addButtons.forEach(btn => {
         btn.replaceWith(btn.cloneNode(true));
     });
-
-    const freshBtns = document.querySelectorAll("button.add");
+    let freshBtns = document.querySelectorAll("button.add");
     freshBtns.forEach(btn => {
         btn.addEventListener("click", (e) => {
-            const section = e.target.closest("section.day-section");
-            const day = section.getAttribute("data-day");
-            const mealDivs = Array.from(section.querySelectorAll(".meal-slot"));
-            const mealSlot = e.target.closest(".meal-slot");
-            const mealIndex = mealDivs.indexOf(mealSlot);
-            const mealType = mealTypes[mealIndex];
+            let section = e.target.closest("section.day-section");
+            let day = section.getAttribute("data-day");
+            let mealDivs = Array.from(section.querySelectorAll(".meal-slot"));
+            let mealSlot = e.target.closest(".meal-slot");
+            let mealIndex = mealDivs.indexOf(mealSlot);
+            let mealType = mealNames[mealIndex];
 
             document.querySelectorAll(".active-slot, .meal-slot.active").forEach(el =>
                 el.classList.remove("active-slot", "active")
@@ -256,7 +243,7 @@ function setAddBtnListeners() {
 
             recipesContainer.querySelectorAll(".recipe-item").forEach(recipeDiv => {
                 recipeDiv.addEventListener("click", () => {
-                    const mealName = recipeDiv.textContent;
+                    let mealName = recipeDiv.textContent;
                     saveMeal(day, mealType, mealName);
 
                     overlay.style.display = "none";
@@ -275,18 +262,18 @@ function setAddBtnListeners() {
 }
 
 function saveMeal(day, mealType, mealName) {
-    const saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
+    let saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
     saved[`${day}-${mealType}`] = mealName;
     localStorage.setItem("mealPlanner", JSON.stringify(saved));
 }
 
 function removeMeal(day, mealType) {
-    const saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
+    let saved = JSON.parse(localStorage.getItem("mealPlanner")) || {};
     delete saved[`${day}-${mealType}`];
     localStorage.setItem("mealPlanner", JSON.stringify(saved));
 }
 
-function openNoteModal(day, targetEl) {
+function openNoteModal(day) {
     let modal = document.createElement("div");
     modal.className = "note-modal";
     modal.innerHTML = `
@@ -301,9 +288,9 @@ function openNoteModal(day, targetEl) {
   `;
     document.body.appendChild(modal);
 
-    const closeNote = modal.querySelector(".close-note");
-    const saveNote = modal.querySelector(".save-note");
-    const textarea = modal.querySelector("textarea");
+    let closeNote = modal.querySelector(".close-note");
+    let saveNote = modal.querySelector(".save-note");
+    let textarea = modal.querySelector("textarea");
 
     closeNote.addEventListener("click", () => modal.remove());
     modal.addEventListener("click", (e) => {
@@ -311,7 +298,7 @@ function openNoteModal(day, targetEl) {
     });
 
     saveNote.addEventListener("click", () => {
-        const note = textarea.value.trim();
+        let note = textarea.value.trim();
         if (!note) return alert("Please write something!");
         saveMeal(day, "Notes", note);
         modal.remove();
@@ -333,15 +320,9 @@ overlay.addEventListener("click", (e) => {
 renderLayout();
 
 window.addEventListener("resize", () => {
-    const isMobile = window.innerWidth < 780;
+    let isMobile = window.innerWidth < 780;
     if (isMobile !== prevIsMobile) {
         prevIsMobile = isMobile;
         renderLayout();
-    } else {
-        document.querySelectorAll("main section.day-section").forEach(section => {
-            section.querySelectorAll(".meal-slot button.add span").forEach((span, idx) => {
-                span.textContent = window.innerWidth < 780 ? `${mealNames[idx]} +Add` : "+ Add";
-            });
-        });
-    }
+    } 
 });
