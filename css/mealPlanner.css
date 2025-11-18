@@ -663,6 +663,7 @@ body.overlayOpen {
   overflow-y: hidden;
 }
 
+<<<<<<< HEAD
 /* === Generic dialog styling === */
 dialog {
   border: none;
@@ -725,6 +726,60 @@ dialog::backdrop {
 /* hover states */
 .mini-confirm button:hover {
   opacity: 0.9;
+=======
+
+footer {
+  border-top: 1px solid var(--line);
+  padding: 28px 0;
+  color: var(--muted);
+  background-color: white;
+  margin-top: 50px;
+}
+
+footer .wrap {
+  max-width: clamp(1040px, 92vw, 1320px);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+footer .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+footer .logo-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--logo);
+  transform: translateZ(0);
+  transition: transform var(--dur-sm) var(--ease);
+}
+
+.fcols {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.fcol {
+  flex: 1 1 220px;
+  min-width: 200px;
+}
+
+.fcol h4 {
+  color: var(--txt);
+  margin: 0 0 8px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.fcol a {
+  display: block;
+  margin: 4px 0;
+>>>>>>> 18ddb859c9b5fc73d4aa574cac64a88c2d83511e
 }
 
 
@@ -747,5 +802,47 @@ dialog::backdrop {
 
   main section {
     width: 100%;
+<<<<<<< HEAD
+=======
+  }
+}
+
+@media (max-width: 940px) {
+  .nav-actions {
+    display: none;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  #menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-links.show {
+    z-index: 1400;
+    display: flex;
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 16px;
+    background: #fff;
+    padding: 16px 0;
+    text-align: center;
+    border-bottom: 1px solid var(--ring);
+    box-shadow: 0 14px 30px rgba(2, 8, 23, 0.08);
+  }
+
+  .nav-links.show a {
+    padding: 12px 0;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ink);
+>>>>>>> 18ddb859c9b5fc73d4aa574cac64a88c2d83511e
   }
 }
