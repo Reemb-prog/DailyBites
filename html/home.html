@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../base.css">
     <script defer src="../inject.js"></script>
     <link rel="stylesheet" href="/css/home.css">
+    <script src="../js/home.js" defer></script>
 </head>
 <body>
   <!-- <nav aria-label="Main">
@@ -220,7 +221,22 @@
   </main>
   <div data-include="footer"></div>
   </div>
+  <!-- Subscribe modal -->
+  <div class="modal-backdrop" id="subscribe-modal" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="subscribe-modal-title">
+      <button class="modal-close" type="button" aria-label="Close">&times;</button>
 
+      <h3 id="subscribe-modal-title">Subscribe to Starter</h3>
+      <p class="muted" id="subscribe-modal-text">
+        Leave your email and we’ll contact you with details.
+      </p>
+
+      <form class="modal-form">
+        <input type="email" placeholder="Your email" required>
+        <button type="submit" class="btn primary">Subscribe</button>
+      </form>
+    </div>
+  </div>
   <!-- <footer>
     <div class="wrap">
       <div class="fcols">
