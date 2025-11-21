@@ -33,6 +33,7 @@ function getUser(userid){
       let username = user.username
     })
 }
+getUser(curId)
 
 who.textContent = `Welcome ${username} !`
 
