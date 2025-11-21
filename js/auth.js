@@ -21,6 +21,9 @@ $(function () {
   let showPass = $(".show-pass")
   let hidePass = $(".hide-pass")
 
+  hidePass.show()
+  showPass.hide()
+
   signupPageButton.on("click", function () {
     loginSection.css("display", "none")
     signupSection.css("display", "flex")
@@ -69,6 +72,7 @@ $(function () {
       })
   })
 
+  // SIGNUP SUBMIT
   signupForm.on("submit", function (e) {
     e.preventDefault()
 
@@ -89,24 +93,22 @@ $(function () {
     window.location.href = "../html/home.html"
   })
 
-  // Show password
-  showPass.on("click", function () {
+  hidePass.on("click", function () {
     let btn = $(this)
     let input = btn.siblings("input").first()
 
     input.attr("type", "text")
     btn.hide()
-    btn.siblings(".hide-pass").show()
+    btn.siblings(".show-pass").show()
   })
 
-  // Hide password
-  hidePass.on("click", function () {
+  showPass.on("click", function () {
     let btn = $(this)
     let input = btn.siblings("input").first()
 
     input.attr("type", "password")
     btn.hide()
-    btn.siblings(".show-pass").show()
+    btn.siblings(".hide-pass").show()
   })
 
   let loginTab = $(".loginTab")
