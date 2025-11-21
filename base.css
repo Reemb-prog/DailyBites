@@ -174,11 +174,11 @@ nav.scrolled {
     gap: 10px;
     padding:10;
     max-height: 64px;
+    width: 100%;
 }
 
 .nav-inner{
-  min-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
   height: 72px;
   padding: 0 24px;
   display: flex;
@@ -216,6 +216,7 @@ nav .btn {
     gap: 32px;
     flex-wrap: nowrap;
     justify-content: space-between;
+    align-items: center;
     flex: 0 1 auto;
     
 }
@@ -385,9 +386,7 @@ footer .logo-mark {
     body.no-scroll { overflow: hidden; }
 
     /* wider container for the “out of screen” vibe */
-    nav .wrap {
-    max-width: 1320px;
-    }
+ 
 
     .nav-links, .nav-actions {
     display: none;
