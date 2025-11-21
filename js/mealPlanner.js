@@ -236,8 +236,9 @@ function renderLayout() {
 
   main.innerHTML = html;
 
-  loadSavedMeals();
   setSlotListeners();
+  loadSavedMeals();
+  
 }
 
 searchInput.addEventListener("input", () => {
