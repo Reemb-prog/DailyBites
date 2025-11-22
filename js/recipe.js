@@ -1,4 +1,3 @@
-
 async function fetchAllRecipes() {
     try {
         let res = await fetch(`../js/data.json`)
@@ -17,7 +16,6 @@ let FAVORITES = JSON.parse(localStorage.getItem("FAV_RECIPES") || "[]")
 function saveFavs() {
     localStorage.setItem("FAV_RECIPES", JSON.stringify(FAVORITES))
 }
-
 
 let filters = {
     search: "",
@@ -90,7 +88,7 @@ function updateSummary() {
     let sum = document.getElementById("filterCount");
     let parts = [];
 
-    if (filters.pill) parts.push("Pill: " + filters.pill);
+    if (filters.pill) parts.push(filters.pill);
     if (filters.meal) parts.push("Meal: " + filters.meal);
     if (filters.diet.length) parts.push("Diet: " + filters.diet.join(", "));
     if (filters.difficulty) parts.push("Difficulty: " + filters.difficulty);
@@ -99,6 +97,8 @@ function updateSummary() {
         ? `${parts.length} filters applied | ${parts.join(" | ")}`
         : "0 filters applied | All cuisines";
 }
+
+
 
 /* =============================
    RENDER
@@ -126,9 +126,58 @@ function renderRecipes() {
         node.querySelector(".desc").textContent = r.description;
         node.querySelector("time").textContent = (r.prep_time + r.cook_time) + " min";
 
-        let outs = node.querySelectorAll(".meta output");
-        outs[0].value = r.calories;
-        outs[1].value = r.rating;
+
+        
+
+            // Get the meta list items
+    let metaItems = node.querySelectorAll(".meta li");
+
+    // Time with clock icon (first li)
+    metaItems[0].innerHTML = `
+        <svg class="icon" viewBox="0 0 24 24" width="16" height="16">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+            <polyline points="12 6 12 12 16 14" fill="none" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <time>${r.prep_time + r.cook_time} min</time>
+    `;
+
+    // Calories with fire icon (second li)
+    metaItems[1].innerHTML = `
+        <svg class="icon" viewBox="0 0 24 24" width="16" height="16">
+            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" fill="none" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <output>${r.calories} cal</output>
+    `;
+
+    // Rating with stars (third li)
+    let rating = parseFloat(r.rating);
+    let fullStars = Math.floor(rating);
+    let hasHalfStar = rating % 1 >= 0.5;
+
+    let starsHTML = '<span class="stars">';
+    // Add full stars
+    for (let i = 0; i < fullStars; i++) {
+        starsHTML += '<svg class="star" viewBox="0 0 24 24" width="16" height="16"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="#fbbf24" stroke="#f59e0b"/></svg>';
+    }
+    // Add half star if needed
+    if (hasHalfStar) {
+        starsHTML += '<svg class="star" viewBox="0 0 24 24" width="16" height="16"><defs><linearGradient id="half"><stop offset="50%" stop-color="#fbbf24"/><stop offset="50%" stop-color="transparent"/></linearGradient></defs><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="url(#half)" stroke="#f59e0b"/></svg>';
+    }
+    // Add empty stars
+    let totalStars = fullStars + (hasHalfStar ? 1 : 0);
+    for (let i = totalStars; i < 5; i++) {
+        starsHTML += '<svg class="star" viewBox="0 0 24 24" width="16" height="16"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="#d1d5db" stroke-width="2"/></svg>';
+    }
+    starsHTML += ` <span style="margin-left: 4px;">${rating}</span></span>`;
+
+    metaItems[2].innerHTML = starsHTML;
+
+
+
+
+
+
+
 
         let tagsBox = node.querySelector(".tags");
         tagsBox.innerHTML = "";
@@ -195,6 +244,27 @@ document.getElementById("tagDialogClose").onclick = () => {
     document.getElementById("tagDialog").close();
 };
 
+/* =============================
+   POPULATE FILTERS DYNAMICALLY
+============================= */
+function populateFilters() {
+    // Extract unique values from recipes
+    let meals = [...new Set(RECIPES.map(r => r.meal_category))].sort();
+    let diets = [...new Set(RECIPES.map(r => r.diet_category))].sort();
+    let difficulties = [...new Set(RECIPES.map(r => r.difficulty))].sort();
+
+    // Populate Meal Type dropdown
+    let mealPanel = document.querySelectorAll('.dd-panel')[0];
+    mealPanel.innerHTML = meals.map(m => `<button class="dd-item">${m}</button>`).join('');
+
+    // Populate Dietary dropdown
+    let dietPanel = document.querySelectorAll('.dd-panel')[1];
+    dietPanel.innerHTML = diets.map(d => `<button class="dd-item">${d}</button>`).join('');
+
+    // Populate Time & Difficulty dropdown (using difficulties only, as time isn't categorized in JSON)
+    let diffPanel = document.querySelectorAll('.dd-panel')[2];
+    diffPanel.innerHTML = difficulties.map(d => `<button class="dd-item">${d}</button>`).join('');
+}
 
 /* =============================
    MODAL
@@ -348,4 +418,5 @@ document.getElementById("searchInput").oninput = e => {
 /* =============================
    FIRST RENDER
 ============================= */
+populateFilters();  // Populate filters dynamically before rendering
 renderRecipes();
