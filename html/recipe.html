@@ -57,7 +57,7 @@
 
             </section>
 
-           
+
             <!-- Filter Summary -->
             <section class="filter-summary">
                 <span class="icon">
@@ -106,67 +106,80 @@
 
         <!-- Modal -->
         <dialog id="modal">
-            <section class="modal-hero-container">
-                <img id="mImg" alt="">
-                <button id="mClose" class="modal-close">✕</button>
-                <button class="modal-fav">♡</button>
-            </section>
-
-            <section class="modal-content">
-                <h2 id="mTitle"></h2>
-                <p id="mDesc" class="modal-desc"></p>
-
-                <ul class="modal-stats">
-                    <li><strong id="mPrep"></strong><span>Prep Time</span></li>
-                    <li><strong id="mCook"></strong><span>Cook Time</span></li>
-                    <li><strong id="mServ"></strong><span>Servings</span></li>
-                    <li><strong id="mCal"></strong><span>Calories</span></li>
-                </ul>
-
-                <section class="modal-body-grid">
-                    <section>
-                        <h3>Ingredients</h3>
-                        <ul id="mIngr" class="modal-list"></ul>
-                    </section>
-                    <section>
-                        <h3>Instructions</h3>
-                        <ol id="mSteps" class="modal-list num"></ol>
-                    </section>
+            <section class="modal-container">
+                <!-- Header with image -->
+                <section class="modal-header">
+                    <img id="mImg" alt="Recipe image">
+                    <button id="mClose" class="modal-close">✕</button>
                 </section>
 
-                <p>
-                    <strong>Rating:</strong>
-                    <span id="mRating"></span> 
-                </p>
+                <!-- Content -->
+                <section class="modal-content">
+                    <!-- Title and description -->
+                    <h2 id="mTitle">Grilled Chicken Salad</h2>
+                    <p id="mDesc" class="modal-desc">A fresh and healthy grilled chicken salad packed with greens,
+                        avocado, and a tangy lemon dressing.</p>
 
-                <p>
-                    <strong>Views:</strong>
-                    <span id="mViews"></span>
-                </p>
+                    <!-- Stats row -->
+                    <section class="modal-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="mTime">25 min</span>
+                            <span class="stat-label">Total Time</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="mCal">350 cal</span>
+                            <span class="stat-label">Calories</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="mServ">4 servings</span>
+                            <span class="stat-label">Servings</span>
+                        </div>
+                    </section>
 
-                <p>
-                    <strong>Meal:</strong> 
-                    <span id="mMeal"></span>
-                </p>
+                    <!-- Servings and actions -->
+                    <section class="servings-actions">
+                        <div class="servings-info">
+                            <strong>Servings:</strong>
+                            <span id="mServingsCount">4</span>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="save-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                Save Recipe
+                            </button>
+                            <button class="share-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                                    <polyline points="16 6 12 2 8 6"></polyline>
+                                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                                </svg>
+                                Share
+                            </button>
+                        </div>
+                    </section>
 
-                <p>
-                    <strong>Diet:</strong> 
-                    <span id="mDiet"></span>
-                </p>
-                <p>
-                    <strong>Difficulty:</strong> <span id="mDiff"></span>
-                </p>
-                <div class="tag-row" id="mTags"></div>
+                    <!-- Ingredients section -->
+                    <section class="ingredients-section">
+                        <h3>Ingredients</h3>
+                        <ul id="mIngr" class="ingredients-list">
+                            <!-- Ingredients will be populated here -->
+                        </ul>
+                    </section>
 
-                <ul class="macros">
-                    <li>Protein: <span id="mProt"></span></li>
-                    <li>Carbs: <span id="mCarbs"></span></li>
-                    <li>Fat: <span id="mFat"></span></li>
-                </ul>
-                <ul id="mMicros"></ul>
+                    <!-- Instructions section -->
+                    <section class="instructions-section">
+                        <h3>Instructions</h3>
+                        <ol id="mInstr" class="instructions-list">
+                            <!-- Instructions will be populated here -->
+                        </ol>
+                    </section>
+                </section>
             </section>
         </dialog>
-
         <!-- Tag Dialog -->
         <dialog id="tagDialog" class="tag-dialog">
             <h3>All Tags</h3>
