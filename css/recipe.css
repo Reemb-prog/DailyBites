@@ -1032,3 +1032,32 @@ body.modal-open {
     transform: translateY(0);
   }
 }
+.card:hover .actions .primary {
+    background: linear-gradient(45deg, var(--logo), #3ae156, var(--logo));
+    background-size: 200% 200%;
+    animation: gradientShift 2s ease infinite;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 211, 153, 0.4);
+}
+
+.actions .primary {
+    position: relative;
+    overflow: hidden;
+    background: var(--logo);
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 12px 24px;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
