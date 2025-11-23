@@ -20,32 +20,32 @@ function toggleMenu() {
     // document.body.classList.toggle('no-scroll')
 
     // hamburger.setAttribute('aria-expanded', String(!isOpen))
-    // hamburger.classList.add('open-anim'); setTimeout(() => hamburger.classList.remove('open-anim'), 260)
+    // hamburger.classList.add('open-anim') setTimeout(() => hamburger.classList.remove('open-anim'), 260)
 
     if (!isOpen) {
         // OPEN
-        navLinks.appendChild(navActions);
-        navLinks.classList.add('open');                 // show first so CSS can animate
-        document.body.classList.add('no-scroll');
-        hamburger.setAttribute('aria-expanded', 'true');
+        navLinks.appendChild(navActions)
+        navLinks.classList.add('open')                 // show first so CSS can animate
+        document.body.classList.add('no-scroll')
+        hamburger.setAttribute('aria-expanded', 'true')
 
         // tiny pop on the icon
-        hamburger.classList.add('open-anim');
-        setTimeout(() => hamburger.classList.remove('open-anim'), 380); // ~ --dur-md
-        return;
+        hamburger.classList.add('open-anim')
+        setTimeout(() => hamburger.classList.remove('open-anim'), 380) // ~ --dur-md
+        return
     }
 
     // CLOSE (delegate to the animated closer)
-    closeMenu();
+    closeMenu()
 }
-const logoutBtn = document.querySelector('.logout-btn');
+let logoutBtn = document.querySelector('.logout-btn')
 
 if (logoutBtn) {
   logoutBtn.addEventListener('click', (e) => {
-    e.preventDefault(); 
-    sessionStorage.removeItem('userId');
-    window.location.href = logoutBtn.href;
-  });
+    e.preventDefault() 
+    sessionStorage.removeItem('userId')
+    window.location.href = logoutBtn.href
+  })
 }
 function closeMenu({ instant = false } = {}) {
     // navLinks.classList.remove('open')
@@ -53,34 +53,34 @@ function closeMenu({ instant = false } = {}) {
     // let navRow = document.getElementById('nav-desc')
     // if (navActions.parentNode !== navRow) navRow.appendChild(navActions)
     // hamburger.setAttribute('aria-expanded', 'false')
-    if (!navLinks.classList.contains('open')) return;
+    if (!navLinks.classList.contains('open')) return
 
     // If we're on desktop or explicitly asked to, reset instantly (no animation)
     if (instant || window.innerWidth > breakpoint) {
-        navLinks.classList.remove('closing');
-        navLinks.classList.remove('open');
-        document.body.classList.remove('no-scroll');
-        hamburger.setAttribute('aria-expanded', 'false');
+        navLinks.classList.remove('closing')
+        navLinks.classList.remove('open')
+        document.body.classList.remove('no-scroll')
+        hamburger.setAttribute('aria-expanded', 'false')
 
-        let navRow = document.getElementById('nav-desc');
-        if (navRow && navActions.parentNode !== navRow) navInner.appendChild(navActions);
-        return;
+        let navRow = document.getElementById('nav-desc')
+        if (navRow && navActions.parentNode !== navRow) navInner.appendChild(navActions)
+        return
     }
 
     // run the closing keyframes (mobile)
-    navLinks.classList.add('closing');
-    hamburger.setAttribute('aria-expanded', 'false');
+    navLinks.classList.add('closing')
+    hamburger.setAttribute('aria-expanded', 'false')
 
     navLinks.addEventListener('animationend', function handler() {
-        navLinks.removeEventListener('animationend', handler);
-        navLinks.classList.remove('closing');
-        navLinks.classList.remove('open');
-        document.body.classList.remove('no-scroll');
+        navLinks.removeEventListener('animationend', handler)
+        navLinks.classList.remove('closing')
+        navLinks.classList.remove('open')
+        document.body.classList.remove('no-scroll')
 
         // move actions back after it fully closes
-        let navRow = document.getElementById('nav-desc');
-        if (navActions.parentNode !== navRow) navInner.appendChild(navActions);
-    }, { once: true });
+        let navRow = document.getElementById('nav-desc')
+        if (navActions.parentNode !== navRow) navInner.appendChild(navActions)
+    }, { once: true })
 }
 
 hamburger.addEventListener('click', toggleMenu)
@@ -105,26 +105,26 @@ document.addEventListener('keydown', (e) => {
 
 // Smooth scroll for same-page anchors across the site
 document.addEventListener('click', (e) => {
-  let a = e.target.closest('a[href^="#"]');
-  if (!a) return;
-  let id = a.getAttribute('href');
-  if (!id || id === '#') return;
-  let el = document.querySelector(id);
-  if (!el) return;
-  e.preventDefault();
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-});
+  let a = e.target.closest('a[href^="#"]')
+  if (!a) return
+  let id = a.getAttribute('href')
+  if (!id || id === '#') return
+  let el = document.querySelector(id)
+  if (!el) return
+  e.preventDefault()
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+})
 
 // Intersection-based reveal utility
 let revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((en) => {
     if (en.isIntersecting) {
-      en.target.classList.add('is-inview');
-      revealObserver.unobserve(en.target);
+      en.target.classList.add('is-inview')
+      revealObserver.unobserve(en.target)
     }
-  });
-}, { threshold: 0.08 });
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  })
+}, { threshold: 0.08 })
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el))
 
 
 // ===== Modal System =====
@@ -134,7 +134,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 //   <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
 //     <div class="modal__header">
 //       <h3 id="modal-title">Title</h3>
-//       <button class="modal__close" aria-label="Close">&times;</button>
+//       <button class="modal__close" aria-label="Close">&times</button>
 //     </div>
 //     <div class="modal__body"></div>
 //   </div>
@@ -172,11 +172,11 @@ modalEl?.addEventListener('click', (e) => {
 //openModal({ title: 'Add Note', html: '<form>...</form>' })
 
 // Sticky header elevation
-let navEl = document.querySelector('nav');
+let navEl = document.querySelector('nav')
 function toggleNavShadow() {
-  if (!navEl) return;
-  let y = window.scrollY || window.pageYOffset;
-  navEl.classList.toggle('scrolled', y > 4);
+  if (!navEl) return
+  let y = window.scrollY || window.pageYOffset
+  navEl.classList.toggle('scrolled', y > 4)
 }
-toggleNavShadow();
-document.addEventListener('scroll', toggleNavShadow, { passive: true });
+toggleNavShadow()
+document.addEventListener('scroll', toggleNavShadow, { passive: true })

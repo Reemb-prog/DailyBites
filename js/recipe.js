@@ -309,28 +309,25 @@ function displayRecipes() {
             moreButton.className = "more-toggle";
             moreButton.textContent = `+${hiddenTags.length} more`;
             
-            moreButton.addEventListener('click', () => {
-                // close any existing popovers
-                document.querySelectorAll('.tag-popover').forEach(p => p.remove())
-                
-                // create a small popover next to this button
-                let pop = document.createElement('div');
-                pop.className = 'tag-popover';
+            moreButton.addEventListener('mousemove', (e) => {
+                e.stopPropagation()
 
+                let tagDialog = document.getElementById("tagDialog");
+                let tagContent = document.getElementById("tagDialogContent");
+                
+                tagContent.innerHTML = "";
                 allRecipeTags.forEach(tag => {
                     let tagElement = document.createElement("span");
                     tagElement.textContent = tag;
-                    pop.appendChild(tagElement);
+                    tagContent.appendChild(tagElement);
                 });
+                let rect = moreButton.getBoundingClientRect();
+                 tagDialog.style.position = "absolute";
+                tagDialog.style.top  = `${rect.bottom + window.scrollY - 20}px`;
+                tagDialog.style.left = `${rect.left + window.scrollX + 80}px`;
 
-                document.body.appendChild(pop);
-
-                // position it under the "+X more" button
-                const rect = moreButton.getBoundingClientRect();
-                pop.style.top  = `${rect.bottom + window.scrollY + 6}px`;
-                pop.style.left = `${rect.left + window.scrollX}px`;
+                tagDialog.show()
             });
-            
             tagsContainer.appendChild(moreButton);
         }
 
@@ -821,16 +818,19 @@ document.getElementById("searchInput").addEventListener('input', event => {
     debouncedDisplayRecipes();
 });
 
-// Enhanced tag dialog
-document.getElementById("tClose").addEventListener('click', () => {
-    document.getElementById("tagDialog").close();
+document.addEventListener('mousemove', (e) => {
+  let tagDialog = document.getElementById('tagDialog');
+  if (!tagDialog || !tagDialog.open) return;
+
+  let overDialog = e.target.closest('#tagDialog');
+  let overToggle = e.target.closest('.more-toggle');
+
+  // if mouse is not over dialog and not over the "+X more" button → close
+  if (!overDialog && !overToggle) {
+    tagDialog.close();
+  }
 });
 
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.tag-popover') && !e.target.classList.contains('more-toggle')) {
-        document.querySelectorAll('.tag-popover').forEach(p => p.remove());
-    }
-});
 
 // Enhanced initialization
 async function initializeApp() {
