@@ -270,7 +270,7 @@ nav {
     box-shadow var(--dur-md) var(--ease),
     transform var(--dur-md) var(--ease);
   min-height: 64px;
-  z-index: 1000;
+  z-index: 10000;
 }
 
 nav.scrolled {

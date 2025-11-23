@@ -8,7 +8,8 @@ let currentFilters = {
     mealType: null,
     dietTypes: [],
     difficulty: null,
-    quickFilter: null
+    quickFilter: null,
+    ingredients: [] 
 };
 
 // Debounce function for search performance
@@ -24,10 +25,35 @@ function debounce(func, wait) {
     };
 }
 
+// note to aya: made the favorites user specific
+
+// id saved in session storage from log in page
+function currentUserId(){
+    let  id = sessionStorage.getItem('userId') 
+    if(!id){ alert('No userId in sessionStorage. Set it at login.')  }
+    return id || 'anonymous' 
+}
+
+let curId = currentUserId()
+
+async function getUser(userid) {
+  let res = await fetch("../js/data.json");
+  let data = await res.json();
+
+  let users = data.users || [];
+  let user  = users.find(u => String(u.id) === String(userid));
+
+  return user?.username || userid;
+}
+let KEY;
+getUser(curId).then(username => {
+  KEY = `${username}: favorites`
+});
+
 // Enhanced save favorites with validation
 function saveFavorites() {
     try {
-        localStorage.setItem("savedRecipes", JSON.stringify(favoriteRecipes));
+        localStorage.setItem(KEY, JSON.stringify(favoriteRecipes));
     } catch (error) {
         console.error('Failed to save favorites:', error);
         showNotification('Failed to save favorites', 'error');
@@ -50,46 +76,46 @@ async function loadAllRecipes() {
     }
 }
 
-// Fallback recipes in case data.json fails
-function getFallbackRecipes() {
-    return [
-        {
-            id: 1,
-            name: "Classic Grilled Chicken Salad",
-            description: "A fresh and healthy grilled chicken salad with mixed greens, avocado, and lemon dressing.",
-            image: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23f1f5f9'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='%2394a3b8'>Grilled Chicken Salad</text></svg>",
-            prep_time: 15,
-            cook_time: 10,
-            calories: 350,
-            protein: 25,
-            carbs: 15,
-            rating: 4.8,
-            servings: 4,
-            difficulty: "Easy",
-            meal_category: "Lunch",
-            diet_category: "High Protein",
-            tags: ["Quick & Easy", "Healthy", "Low Carb"],
-            ingredients: [
-                "2 chicken breasts",
-                "4 cups mixed greens",
-                "1 avocado, sliced",
-                "1 cup cherry tomatoes",
-                "1/4 red onion, thinly sliced",
-                "2 tbsp olive oil",
-                "1 lemon, juiced",
-                "Salt and pepper to taste"
-            ],
-            instructions: [
-                "Season chicken breasts with salt and pepper",
-                "Grill chicken for 5-7 minutes per side until cooked through",
-                "Let chicken rest for 5 minutes, then slice",
-                "Combine mixed greens, avocado, tomatoes, and red onion in a large bowl",
-                "Whisk together olive oil and lemon juice for dressing",
-                "Top salad with sliced chicken and drizzle with dressing"
-            ]
-        }
-    ];
-}
+// // Fallback recipes in case data.json fails
+// function getFallbackRecipes() {
+//     return [
+//         {
+//             id: 1,
+//             name: "Classic Grilled Chicken Salad",
+//             description: "A fresh and healthy grilled chicken salad with mixed greens, avocado, and lemon dressing.",
+//             image: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23f1f5f9'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='%2394a3b8'>Grilled Chicken Salad</text></svg>",
+//             prep_time: 15,
+//             cook_time: 10,
+//             calories: 350,
+//             protein: 25,
+//             carbs: 15,
+//             rating: 4.8,
+//             servings: 4,
+//             difficulty: "Easy",
+//             meal_category: "Lunch",
+//             diet_category: "High Protein",
+//             tags: ["Quick & Easy", "Healthy", "Low Carb"],
+//             ingredients: [
+//                 "2 chicken breasts",
+//                 "4 cups mixed greens",
+//                 "1 avocado, sliced",
+//                 "1 cup cherry tomatoes",
+//                 "1/4 red onion, thinly sliced",
+//                 "2 tbsp olive oil",
+//                 "1 lemon, juiced",
+//                 "Salt and pepper to taste"
+//             ],
+//             instructions: [
+//                 "Season chicken breasts with salt and pepper",
+//                 "Grill chicken for 5-7 minutes per side until cooked through",
+//                 "Let chicken rest for 5 minutes, then slice",
+//                 "Combine mixed greens, avocado, tomatoes, and red onion in a large bowl",
+//                 "Whisk together olive oil and lemon juice for dressing",
+//                 "Top salad with sliced chicken and drizzle with dressing"
+//             ]
+//         }
+//     ];
+// }
 
 // Enhanced search matching with better scoring
 function matchesSearchTerm(recipe) {
@@ -136,6 +162,18 @@ function matchesQuickFilter(recipe) {
 function shouldShowRecipe(recipe) {
     if (!matchesSearchTerm(recipe)) return false;
     if (!matchesQuickFilter(recipe)) return false;
+
+    if (currentFilters.ingredients && currentFilters.ingredients.length > 0) {
+        let ingredientsText = (recipe.ingredients || [])
+            .join(" ")
+            .toLowerCase();
+
+        let hasAllIngredients = currentFilters.ingredients.every(term =>
+            ingredientsText.includes(term)
+        );
+
+        if (!hasAllIngredients) return false;
+    }
 
     if (currentFilters.mealType && recipe.meal_category !== currentFilters.mealType) {
         return false;
@@ -272,17 +310,25 @@ function displayRecipes() {
             moreButton.textContent = `+${hiddenTags.length} more`;
             
             moreButton.addEventListener('click', () => {
-                let tagDialog = document.getElementById("tagDialog");
-                let tagContent = document.getElementById("tagDialogContent");
+                // close any existing popovers
+                document.querySelectorAll('.tag-popover').forEach(p => p.remove())
                 
-                tagContent.innerHTML = "";
+                // create a small popover next to this button
+                let pop = document.createElement('div');
+                pop.className = 'tag-popover';
+
                 allRecipeTags.forEach(tag => {
                     let tagElement = document.createElement("span");
                     tagElement.textContent = tag;
-                    tagContent.appendChild(tagElement);
+                    pop.appendChild(tagElement);
                 });
-                
-                tagDialog.showModal();
+
+                document.body.appendChild(pop);
+
+                // position it under the "+X more" button
+                const rect = moreButton.getBoundingClientRect();
+                pop.style.top  = `${rect.bottom + window.scrollY + 6}px`;
+                pop.style.left = `${rect.left + window.scrollX}px`;
             });
             
             tagsContainer.appendChild(moreButton);
@@ -373,6 +419,73 @@ function showRecipeDetails(recipe) {
     document.getElementById("mServ").textContent = recipe.servings + " servings";
     document.getElementById("mServingsCount").textContent = recipe.servings;
 
+    // Extra fields (rating, views, meal, diet, difficulty)
+    let ratingEl = document.getElementById("mRating");
+    if (ratingEl) {
+        let ratingNumber = Number(recipe.rating);
+        let ratingDisplay = Number.isFinite(ratingNumber)
+            ? ratingNumber.toFixed(1)
+            : (recipe.rating || "—");
+        ratingEl.textContent = ratingDisplay + " ★";
+    }
+
+    let viewsEl = document.getElementById("mViews");
+    if (viewsEl) {
+        let views = recipe.views;
+        if (typeof views === "number" && typeof views.toLocaleString === "function") {
+            viewsEl.textContent = views.toLocaleString();
+        } else {
+            viewsEl.textContent = views || "—";
+        }
+    }
+
+    let mealEl = document.getElementById("mMeal");
+    if (mealEl) mealEl.textContent = recipe.meal_category || "—";
+
+    let dietEl = document.getElementById("mDiet");
+    if (dietEl) dietEl.textContent = recipe.diet_category || "—";
+
+    let diffEl = document.getElementById("mDiff");
+    if (diffEl) diffEl.textContent = recipe.difficulty || "—";
+
+    // Nutrition (macros + micronutrients)
+    let protEl = document.getElementById("mProt");
+    if (protEl && recipe.protein != null) protEl.textContent = recipe.protein + " g";
+
+    let carbsEl = document.getElementById("mCarbs");
+    if (carbsEl && recipe.carbs != null) carbsEl.textContent = recipe.carbs + " g";
+
+    let fatEl = document.getElementById("mFat");
+    if (fatEl && recipe.fat != null) fatEl.textContent = recipe.fat + " g";
+
+    let microsList = document.getElementById("mMicros");
+    if (microsList) {
+        microsList.innerHTML = "";
+        if (recipe.micronutrients) {
+            Object.entries(recipe.micronutrients).forEach(([key, value]) => {
+                let li = document.createElement("li");
+                let label = key.replace(/([A-Z])/g, " $1");
+                label = label.charAt(0).toUpperCase() + label.slice(1);
+                li.textContent = `${label}:   ${value}`;
+                microsList.appendChild(li);
+            });
+        }
+    }
+
+    // Tags inside modal
+    let modalTags = document.getElementById("mTags");
+    if (modalTags) {
+        modalTags.innerHTML = "";
+        let allTags = [recipe.meal_category, recipe.diet_category, ...(recipe.tags || [])]
+            .filter(Boolean);
+        allTags.forEach(tag => {
+            let span = document.createElement("span");
+            span.textContent = tag;
+            modalTags.appendChild(span);
+        });
+    }
+
+
     let ingredientsList = document.getElementById("mIngr");
     ingredientsList.innerHTML = "";
     
@@ -419,44 +532,69 @@ function showRecipeDetails(recipe) {
     };
 
     let saveBtn = document.querySelector(".save-btn");
+    let modalFav = document.querySelector(".modal-fav");
     let isCurrentlySaved = favoriteRecipes.includes(recipe.id);
-    
-    if (isCurrentlySaved) {
-        saveBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg> Saved';
-        saveBtn.style.background = "#dcfce7";
-        saveBtn.style.borderColor = "#16a34a";
-        saveBtn.style.color = "#166534";
-    } else {
-        saveBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg> Save Recipe';
-        saveBtn.style.background = "white";
-        saveBtn.style.borderColor = "#e2e8f0";
-        saveBtn.style.color = "#475569";
+
+    function updateFavoriteUI(isSaved) {
+        // Update text button state
+        if (saveBtn) {
+            if (isSaved) {
+                saveBtn.innerHTML =
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg> Saved';
+                saveBtn.style.background = "#dcfce7";
+                saveBtn.style.borderColor = "#16a34a";
+                saveBtn.style.color = "#166534";
+            } else {
+                saveBtn.innerHTML =
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg> Save Recipe';
+                saveBtn.style.background = "white";
+                saveBtn.style.borderColor = "#e2e8f0";
+                saveBtn.style.color = "#475569";
+            }
+        }
+
+        // Update heart inside modal header
+        if (modalFav) {
+            modalFav.classList.toggle("active", isSaved);
+            modalFav.innerHTML = isSaved ? "&#9829;" : "&#9825;"; // ♥ / ♡
+        }
+
+        // Update corresponding card heart
+        let cardFavoriteBtn = document.querySelector(`[data-id="${recipe.id}"] .fav`);
+        if (cardFavoriteBtn) {
+            cardFavoriteBtn.classList.toggle("active", isSaved);
+        }
     }
-    
-    saveBtn.onclick = () => {
-        if (favoriteRecipes.includes(recipe.id)) {
+
+    // Initial state
+    updateFavoriteUI(isCurrentlySaved);
+
+    function toggleFavorite() {
+        let isSaved = favoriteRecipes.includes(recipe.id);
+
+        if (isSaved) {
             favoriteRecipes = favoriteRecipes.filter(id => id !== recipe.id);
-            saveBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg> Save Recipe';
-            saveBtn.style.background = "white";
-            saveBtn.style.borderColor = "#e2e8f0";
-            saveBtn.style.color = "#475569";
             showNotification('Removed from favorites', 'info');
         } else {
             favoriteRecipes.push(recipe.id);
-            saveBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg> Saved';
-            saveBtn.style.background = "#dcfce7";
-            saveBtn.style.borderColor = "#16a34a";
-            saveBtn.style.color = "#166534";
             showNotification('Added to favorites!', 'success');
         }
-        
+
         saveFavorites();
-        
-        let cardFavoriteBtn = document.querySelector(`[data-id="${recipe.id}"] .fav`);
-        if (cardFavoriteBtn) {
-            cardFavoriteBtn.classList.toggle("active");
-        }
-    };
+        updateFavoriteUI(!isSaved);
+    }
+
+    if (saveBtn) {
+        saveBtn.onclick = toggleFavorite;
+    }
+
+    if (modalFav) {
+        modalFav.onclick = (e) => {
+            e.stopPropagation(); // don't close modal
+            toggleFavorite();
+        };
+    }
+
 
     let shareBtn = document.querySelector(".share-btn");
     shareBtn.onclick = async () => {
@@ -535,19 +673,20 @@ function setupFilters() {
 
 // Enhanced notification system
 function showNotification(message, type = 'info') {
+    document.querySelectorAll('.notification').forEach(n => n.remove())
     let notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
     
     notification.style.cssText = `
         position: fixed;
-        top: 20px;
-        right: 20px;
+        top: 10%;
+        right: 40%;
         padding: 12px 20px;
         border-radius: 8px;
         color: white;
         font-weight: 500;
-        z-index: 1000;
+        z-index: 1100;
         animation: slideIn 0.3s ease-out;
         max-width: 300px;
     `;
@@ -575,12 +714,12 @@ function showNotification(message, type = 'info') {
 let notificationStyles = document.createElement('style');
 notificationStyles.textContent = `
     @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
     }
     @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
+        from { transform: translateY(0); opacity: 1; }
+        to { transform: translateY(100%); opacity: 0; }
     }
 `;
 document.head.appendChild(notificationStyles);
@@ -664,13 +803,33 @@ document.querySelectorAll(".quick-pill").forEach(button => {
 // Enhanced search with debouncing
 let debouncedDisplayRecipes = debounce(displayRecipes, 300);
 document.getElementById("searchInput").addEventListener('input', event => {
-    currentFilters.search = event.target.value.trim().toLowerCase();
+    let raw = event.target.value.trim().toLowerCase();
+    let hasComma = raw.includes(",")
+    
+    if (hasComma){
+        currentFilters.ingredients = raw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+        currentFilters.search = "";          // disable normal text search in this mode
+    }
+    else {
+        currentFilters.search = raw.trim();   // use for full-text search
+        currentFilters.ingredients = [];      // disable ingredient filter
+    }
     debouncedDisplayRecipes();
 });
 
 // Enhanced tag dialog
-document.getElementById("tagDialogClose").addEventListener('click', () => {
+document.getElementById("tClose").addEventListener('click', () => {
     document.getElementById("tagDialog").close();
+});
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.tag-popover') && !e.target.classList.contains('more-toggle')) {
+        document.querySelectorAll('.tag-popover').forEach(p => p.remove());
+    }
 });
 
 // Enhanced initialization

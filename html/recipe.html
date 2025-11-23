@@ -12,16 +12,14 @@
 </head>
 
 <body>
-
+    <div data-include="nav"></div>
     <main>
-
-        <div data-include="nav"></div>
 
         <!-- Filters Section -->
         <section class="filters">
 
             <!-- Search Bar -->
-            <input id="searchInput" class="search-bar" type="text" placeholder="Search recipes or ingredients…">
+            <input id="searchInput" class="search-bar" type="text" placeholder="Search recipes or ingredients... (ie. carrot, onion)">
 
             <!-- Quick Pills -->
             <section class="quick-row">
@@ -95,7 +93,7 @@
                             <li title="Calories"><output></output> cal</li>
                             <li title="Rating"><output></output></li>
                         </ul>
-                        <nav class="tags"></nav>
+                        <div class="tags"></div>
                     </section>
                     <footer class="actions">
                         <a href="#" rel="recipe" class="primary">View Recipe</a>
@@ -111,6 +109,7 @@
                 <!-- Header with image -->
                 <section class="modal-header">
                     <img id="mImg" alt="Recipe image">
+                    <button type="button" class="fav modal-fav" title="Save">&#9825;</button>
                     <button id="mClose" class="modal-close">✕</button>
                 </section>
 
@@ -144,13 +143,6 @@
                             <span id="mServingsCount">4</span>
                         </div>
                         <div class="action-buttons">
-                            <button class="save-btn">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                </svg>
-                                Save Recipe
-                            </button>
                             <button class="share-btn">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
@@ -161,6 +153,44 @@
                                 Share
                             </button>
                         </div>
+                    </section>
+                    <!-- Extra recipe info -->
+                    <section class="modal-extra-details">
+                        <div class="detail-column">
+                            <p><strong>Rating:</strong> <span id="mRating"></span></p>
+                            <p><strong>Meal:</strong> <span id="mMeal"></span></p>
+                            <p><strong>Difficulty:</strong> <span id="mDiff"></span></p>
+                        </div>
+                        <div class="detail-column">
+                            <p><strong>Views:</strong> <span id="mViews"></span></p>
+                            <p><strong>Diet:</strong> <span id="mDiet"></span></p>
+                        </div>
+                    </section>
+
+                    <!-- Nutrition info -->
+                    <section class="modal-nutrition">
+                        <h3>Nutrition per serving</h3>
+                        <div class="macro-row">
+                            <div class="macro-item">
+                                <span class="label">Protein</span>
+                                <span class="value" id="mProt"></span>
+                            </div>
+                            <div class="macro-item">
+                                <span class="label">Carbs</span>
+                                <span class="value" id="mCarbs"></span>
+                            </div>
+                            <div class="macro-item">
+                                <span class="label">Fat</span>
+                                <span class="value" id="mFat"></span>
+                            </div>
+                        </div>
+                        <ul id="mMicros" class="micro-list"></ul>
+                    </section>
+
+                    <!-- Tags -->
+                    <section class="modal-tags">
+                        <h3>Tags</h3>
+                        <div id="mTags" class="tags"></div>
                     </section>
 
                     <!-- Ingredients section -->
@@ -183,16 +213,15 @@
         </dialog>
         <!-- Tag Dialog -->
         <dialog id="tagDialog" class="tag-dialog">
-            <h3>All Tags</h3>
+            <div id="tagHead">
+                <h3>All Tags</h3>
+                <button id="tClose" class="modal-close">✕</button>
+            </div>
             <section id="tagDialogContent"></section>
-            <button id="tagDialogClose">Close</button>
         </dialog>
 
-        <!-- Footer Include -->
-        <div data-include="footer"></div>
-
     </main>
-
+    <div data-include="footer"></div>
 </body>
 
 </html>

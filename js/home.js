@@ -34,6 +34,7 @@ document.querySelectorAll('.subs .plan .btn').forEach(btn => {
         let planName = card.querySelector('h3')?.textContent.trim() || 'this plan';
         let price = card.querySelector('.price')?.textContent.trim() || '';
         
+        let plans = document.querySelectorAll('.plan')
         // Highlight the selected plan
         plans.forEach(p => p.classList.remove('selected'));
         card.classList.add('selected');
@@ -208,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    initFeatureCardsAnimation();
+    // initFeatureCardsAnimation();
 });
 
 // Initialize when DOM is loaded
