@@ -283,7 +283,7 @@ main {
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  height: 600px;
+  height: 540px;
   transition: var(--transition);
   position: relative;
 }
@@ -364,7 +364,7 @@ main {
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: 0;
+  height: 500px;
 }
 
 .title {
@@ -432,7 +432,7 @@ main {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 5px;
 }
 
 .tags span {
@@ -475,7 +475,7 @@ main {
   gap: 12px;
   border-top: 1px solid #f1f5f9;
   background: var(--panel);
-  margin-top: auto;
+  margin: 0
 }
 
 .primary {
@@ -980,11 +980,6 @@ body.modal-open {
   
   .recipes {
     grid-template-columns: 1fr;
-  }
-  
-  .card {
-    height: auto;
-    min-height: 500px;
   }
   
   .actions {

@@ -294,9 +294,29 @@ function displayRecipes() {
         let tagsContainer = recipeCard.querySelector(".tags");
         tagsContainer.innerHTML = "";
 
-        let allRecipeTags = [recipe.meal_category, recipe.diet_category, ...(recipe.tags || [])];
-        let visibleTags = allRecipeTags.slice(0, 3);
-        let hiddenTags = allRecipeTags.slice(3);
+        let rawTags = [recipe.meal_category, recipe.diet_category, ...(recipe.tags || [])]
+            .filter(Boolean);
+        let seen = new Set();
+        let allRecipeTags = [];
+        rawTags.forEach(tag => {
+            let key = String(tag).toLowerCase();
+            if (!seen.has(key)) {
+                seen.add(key);
+                allRecipeTags.push(tag);
+            }
+        });        
+
+        let visibleTags, hiddenTags;
+        // math stuff where in 1 line 3 tags bse3o => more than 4 more takes place of the last
+        if (allRecipeTags.length <= 3) {
+            // 0–4 tags → show all, no "+ more"
+            visibleTags = allRecipeTags;
+            hiddenTags = [];
+        } else {
+            // 5+ tags → 3 visible + "+X more"
+            visibleTags = allRecipeTags.slice(0, 2);
+            hiddenTags = allRecipeTags.slice(2);
+        }
 
         visibleTags.forEach(tag => {
             let tagElement = document.createElement("span");
