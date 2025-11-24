@@ -280,7 +280,7 @@ main>div {
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease,
     transform 0.1s ease;
-  height: 120px;
+  height: 130px;
 }
 
 .meal-slot:hover {
@@ -303,6 +303,7 @@ main>div {
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .meal-placeholder {
@@ -312,7 +313,7 @@ main>div {
 
 
 .saved-meal {
-  height: 100%;
+  height: 110%;
   width: 100%;
   display: flex;
   align-items: flex-start;
@@ -327,27 +328,16 @@ main>div {
   transition: transform 0.25s ease-in-out;
   cursor: pointer;
 }
-
-/* dim overlay over the image */
-.saved-meal.saved-meal-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
+  
 .saved-meal-thumb {
   width: 100%;
-  position: absolute;
-  inset: 0;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 4px;
 }
 
 .saved-meal-thumb img {
   width: 100%;
-  height: 70%;
+  height: 100%;
   object-fit: cover;
   display: block;
   border-radius: 10px;
@@ -356,11 +346,11 @@ main>div {
 .saved-meal-text {
   position: relative;
   z-index: 1;
-  padding: 4px 6px;
+  padding: 4px 1px;
 }
 
 .saved-meal-text h4 {
-  font-size: 0.9rem;
+  font-size: 12px;
   font-weight: 600;
   color: #384053;
 }
@@ -670,7 +660,7 @@ body.overlayOpen {
   .saved-meal {
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
     gap: 8px;
   }
 
@@ -697,7 +687,11 @@ body.overlayOpen {
     width: 100%;
   }
 }
-
+@media screen and (max-width:530px){
+  .saved-meal{
+    flex-direction: column;
+  }
+}
 
 footer a {
   color: #5b6b7d;

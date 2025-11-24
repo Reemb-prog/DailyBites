@@ -377,10 +377,37 @@ function renderRecipeCard(meal) {
   `;
 }
 
+
+function currentUserId() {
+  let id = sessionStorage.getItem("userId");
+  return id || "anonymous";
+}
+
+function getMyRecipesKey() {
+  return `${currentUserId()}: MyRecipes`;
+}
+
+function getUserMyRecipes() {
+  try {
+    let raw = localStorage.getItem(getMyRecipesKey());
+    if (!raw) return [];
+    let parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.error("Error parsing MyRecipes from localStorage", e);
+    return [];
+  }
+}
+
+
 function fetchAllRecipes() {
   fetch("../js/data.json")
     .then((res) => res.json())
-    .then((data) => (recipes = data.recipes))
+    .then((data) => {
+      let baseRecipes = data.recipes || [];
+      let userRecipes = getUserMyRecipes();
+      recipes = baseRecipes.concat(userRecipes);
+    })
     .catch(() => console.error("error fetching"));
 }
 fetchAllRecipes();
