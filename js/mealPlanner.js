@@ -203,6 +203,7 @@ exportBtn.addEventListener("click", () => {
     y += rowHeight;
   });
 
+  // ---- Grocery list page(s) ----
   let groceryItems = buildGroceryList(saved);
 
   if (groceryItems.length) {
@@ -229,7 +230,6 @@ exportBtn.addEventListener("click", () => {
 
   doc.save("weekly-meal-plan.pdf");
 });
-
 
 function buildGroceryList(saved) {
   if (!recipes || !recipes.length) return [];
@@ -348,7 +348,6 @@ function buildGroceryList(saved) {
   // sort alphabetically
   return result.sort((a, b) => a.localeCompare(b));
 }
-
 
 function renderRecipeCard(meal) {
   return `
@@ -474,6 +473,7 @@ function attachRecipeClickListeners() {
       let mealName = recipeDiv.dataset.name;
       let mealImage = recipeDiv.dataset.image;
 
+      // Find full recipe object so we can keep its ingredients
       let selectedRecipe = recipes?.find((r) => r.name === mealName);
 
       let openSection = document.querySelector("section.day-section.active-slot");
