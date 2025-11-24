@@ -238,6 +238,98 @@ function createStarRating(rating) {
     return starsHTML;
 }
 
+/* ===== Helpers to integrate with Meal Planner page ===== */
+
+const plannerDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const plannerMealTypes = ["Breakfast","Lunch","Dinner"]; // same idea as in planner (no Notes here)
+
+function saveMealToPlanner(day, mealType, recipe) {
+    let plan = JSON.parse(localStorage.getItem("mealPlanner") || "{}");
+    let key = `${day}-${mealType}`;
+
+    let existing = plan[key];
+    if (existing) {
+        let existingName = typeof existing === "string" ? existing : existing.name;
+        let overwrite = confirm(
+            `You already have "${existingName}" planned for ${day} ${mealType}.\nReplace it with "${recipe.name}"?`
+        );
+        if (!overwrite) {
+            showNotification("Kept your existing meal.", "info");
+            return;
+        }
+    }
+
+    plan[key] = { name: recipe.name, image: recipe.image };
+    localStorage.setItem("mealPlanner", JSON.stringify(plan));
+    showNotification(`Added "${recipe.name}" to ${day} ${mealType}`, "success");
+}
+
+function openAddToPlanModal(recipe) {
+    // remove any old modal
+    document.querySelectorAll(".add-plan-modal-backdrop").forEach(m => m.remove());
+
+    let backdrop = document.createElement("div");
+    backdrop.className = "add-plan-modal-backdrop";
+    backdrop.innerHTML = `
+      <div class="add-plan-modal">
+        <h3>Add to Meal Plan</h3>
+        <p class="add-plan-sub">Choose a day and meal slot for:</p>
+        <p class="add-plan-name">${recipe.name}</p>
+
+        <div class="add-plan-row">
+          <label>
+            <span>Day</span>
+            <select class="add-plan-day">
+              ${plannerDays.map(d => `<option value="${d}">${d}</option>`).join("")}
+            </select>
+          </label>
+          <label>
+            <span>Meal</span>
+            <select class="add-plan-meal">
+              ${plannerMealTypes.map(m => `<option value="${m}">${m}</option>`).join("")}
+            </select>
+          </label>
+        </div>
+
+        <div class="add-plan-actions">
+          <button type="button" class="add-plan-cancel">Cancel</button>
+          <button type="button" class="add-plan-confirm">Add to Plan</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(backdrop);
+    document.body.classList.add("modal-open");
+
+    function close() {
+        backdrop.remove();
+        document.body.classList.remove("modal-open");
+    }
+
+    backdrop.addEventListener("click", (e) => {
+        if (e.target === backdrop || e.target.classList.contains("add-plan-cancel")) {
+            close();
+        }
+    });
+
+    backdrop.querySelector(".add-plan-confirm").addEventListener("click", () => {
+        let day = backdrop.querySelector(".add-plan-day").value;
+        let mealType = backdrop.querySelector(".add-plan-meal").value;
+
+        saveMealToPlanner(day, mealType, recipe);
+        close();
+    });
+
+    document.addEventListener("keydown", function escHandler(e) {
+        if (e.key === "Escape") {
+            document.removeEventListener("keydown", escHandler);
+            close();
+        }
+    });
+}
+
+/* ======== Recipe display ========= */
+
 // Enhanced recipe display with better performance
 function displayRecipes() {
     let recipesContainer = document.getElementById("recipes");
@@ -379,12 +471,22 @@ function displayRecipes() {
         addToPlanBtn.title = "Add to Meal Plan";
         addToPlanBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            showNotification(`Added "${recipe.name}" to your meal plan!`, 'success');
+            openAddToPlanModal(recipe);
         });
 
         hoverButtons.appendChild(quickViewBtn);
         hoverButtons.appendChild(addToPlanBtn);
         recipeCard.querySelector(".thumb").appendChild(hoverButtons);
+
+        // Footer "Add to Plan" button from the template
+        let footerAddBtn = recipeCard.querySelector(".ghost");
+        if (footerAddBtn) {
+            footerAddBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openAddToPlanModal(recipe);
+            });
+        }
 
         recipeCard.querySelector(".primary").addEventListener('click', e => { 
             e.preventDefault(); 

@@ -527,3 +527,40 @@ textarea{
   #modal .msec { padding: 10px 12px; }
   #modal .kv { gap: 4px 10px; }
 }
+
+/* ===== EXTRA MOBILE-FRIENDLY TWEAKS (non-core, only overrides) ===== */
+@media (max-width: 640px) {
+  .wrap {
+    margin: 24px auto 32px;
+    padding: 0 12px 24px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-top: 20px;
+  }
+
+  form {
+    grid-template-columns: 1fr;
+  }
+
+  .kv {
+    grid-template-columns: 1fr;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    padding: 14px 14px 16px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}
