@@ -1,5 +1,5 @@
 :root {
-  --bg: #f5fff5;
+  --bg: #ffffff;
   --panel: #ffffff;
   --ink: #0f172a;
   --muted: #64748b;
@@ -13,6 +13,8 @@
   --radius-lg: 16px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+
 
 * {
   box-sizing: border-box;

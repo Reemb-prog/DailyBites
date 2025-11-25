@@ -2,13 +2,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Space Grotesk', sans-serif;
+  
 }
 
-
 :root {
-  --main-color: #f5fff5;
-  --secondary-color: #16a34a;
+  --main-color: #ffffff;
+  --secondary-color: #228f4a;
   --third-color: #faf9f6;
   --green: #16a34a;
   --green-700: #15803d;
@@ -25,6 +24,7 @@
   --dur-sm: 220ms;
   --dur-md: 360ms;
 }
+
 
 body {
   background-color: var(--main-color) !important;
@@ -56,76 +56,36 @@ body>h1::after {
   opacity: 0.8;
 }
 
-.btn {
-  -webkit-appearance: none;
-  appearance: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid transparent;
-  padding: 5px 13px;
-  border-radius: 999px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  cursor: pointer;
-  line-height: 1;
-  transition: filter 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+/* Button text */
+.generate-plan-btn,
+.clear-plan-btn,
+.export-plan-btn {
+   font-family: 'Diella-Regular';
+  font-weight: 600;
 }
 
-.btn:hover {
-  transform: translateY(-1px);
+/* Day names (Monday, Tuesday, etc.) */
+.day-info p:first-child {
+  font-family: 'Diella-Regular';
+  font-weight: bold;
 }
 
-.btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.25);
+/* Dates (Nov 24, etc.) */
+.day-info p:nth-child(2) {
+  font-family: 'Courier New', Courier, monospace;
 }
 
-.btn.primary {
-  background: var(--green);
-  color: var(--green);
-  border-color: var(--green);
-  box-shadow: 0 8px 18px rgba(22, 163, 74, 0.22);
+/* Meal labels (Breakfast, Lunch, Dinner) */
+.meal-label {
+   font-family: 'Diella-Regular';
+  font-weight: 600;
 }
 
-.btn.primary:hover {
-  filter: brightness(0.96);
+/* Body text */
+body {
+  font-family: 'Courier New', Courier, monospace;
 }
 
-.btn.light {
-  background: #fff;
-  color: var(--green);
-  border-color: var(--green);
-}
-
-.btn.light:hover {
-  background: #f7fff9;
-}
-
-
-#menu-toggle {
-  display: none;
-  width: 40px;
-  height: 40px;
-  padding: 8px;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  border-radius: 10px;
-  position: relative;
-  z-index: 1500;
-}
-
-#menu-toggle span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--ink);
-}
-
-#menu-toggle span:nth-child(2) {
-  margin: 6px 0;
-}
 
 .planner-bar {
   max-width: 1200px;
@@ -841,3 +801,5 @@ main > div .day-section:nth-child(4) { animation-delay: 0.65s; }
 main > div .day-section:nth-child(5) { animation-delay: 0.75s; }
 main > div .day-section:nth-child(6) { animation-delay: 0.85s; }
 main > div .day-section:nth-child(7) { animation-delay: 0.95s; }
+
+

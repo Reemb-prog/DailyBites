@@ -1,9 +1,17 @@
 :root {
-    --logo: #0b9a6d;
-    --txt: #0f172a;
-    --muted: #5b6b7d;
-    --line: #e5e7eb;
-    --bg: #ffffff;
+  --main-color: #f0fdf4;     /* Emerald 50 */
+  --secondary-color: #059669; /* Emerald 600 */
+  --third-color: #ecfdf5;    /* Emerald 50 */
+  --green: #059669;          /* Emerald 600 */
+  --green-700: #047857;      /* Emerald 700 */
+  --ink: #0f172a;            /* Slate 900 */
+  --muted: #475569;          /* Slate 600 */
+  --ring: #86efac;           /* Emerald 300 */
+  --bg: #ffffff;             /* White */
+  --light: #f0fdf4;          /* Emerald 50 */
+  --logo: #059669;           /* Emerald 600 */
+  --txt: #0f172a;            /* Slate 900 */
+  --line: #86efac;           /* Emerald 300 */
 }
 
 /* ===== RESET & BASE STYLES ===== */

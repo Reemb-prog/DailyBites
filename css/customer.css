@@ -5,6 +5,7 @@
     --container: 80vw;
 }
 
+
 *{ 
     box-sizing:border-box 
 }
@@ -57,7 +58,7 @@ h1{
     font-size:1.35rem; 
     margin:0 0 12px;
     color: #16a34a;
-    font-family: "Poppins", system-ui, sans-serif;
+     font-family: 'Diella-Regular';
     font-size: 1.8rem;
     font-weight: 600;
     text-align: left;
