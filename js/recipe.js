@@ -28,10 +28,13 @@ function debounce(func, wait) {
 // note to aya: made the favorites user specific
 
 // id saved in session storage from log in page
-function currentUserId(){
-    let  id = sessionStorage.getItem('userId') 
-    if(!id){ alert('No userId in sessionStorage. Set it at login.')  }
-    return id || 'anonymous' 
+function currentUserId() {
+    let id = sessionStorage.getItem('userId');
+    if (!id) {
+        console.log('No userId in sessionStorage. User is anonymous.');
+        return 'anonymous';
+    }
+    return id;
 }
 
 let curId = currentUserId()
