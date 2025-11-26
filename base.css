@@ -501,7 +501,9 @@ footer {
   display: block;
   margin: 4px 0;
 }
-
+footer a {
+  color: #5b6b7d;
+}
 footer .logo {
   display: flex;
   align-items: center;

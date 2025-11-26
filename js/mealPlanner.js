@@ -57,7 +57,7 @@ generateBtn.addEventListener("click", () => {
   sections.forEach((section) => {
     let day = section.getAttribute("data-day");
     mealNames.forEach((mealType) => {
-      if (mealType === "Notes") return; 
+      if (mealType === "Notes") return;
       let key = `${day}-${mealType}`;
       if (plan[key]) return;
       let randomMeal = recipes[Math.floor(Math.random() * recipes.length)];
@@ -104,12 +104,10 @@ exportBtn.addEventListener("click", () => {
   let marginY = 15;
   let lineHeight = 7;
 
-  // ---- Title ----
   let start = thisWeek[0];
   let end = thisWeek[thisWeek.length - 1];
-  let dateRange = `${months[start.getMonth()]} ${start.getDate()} - ${
-    months[end.getMonth()]
-  } ${end.getDate()}`;
+  let dateRange = `${months[start.getMonth()]} ${start.getDate()} - ${months[end.getMonth()]
+    } ${end.getDate()}`;
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
@@ -118,8 +116,6 @@ exportBtn.addEventListener("click", () => {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(11);
   doc.text(dateRange, pageWidth / 2, marginY + 6, { align: "center" });
-
-  // ---- Table layout ----
   let headers = ["Day", "Breakfast", "Lunch", "Dinner", "Notes"];
   let tableTop = marginY + 15;
   let tableWidth = pageWidth - marginX * 2;
@@ -162,10 +158,8 @@ exportBtn.addEventListener("click", () => {
       else row[mealType] = text;
     });
 
-    // Skip empty days
     if (!row.Breakfast && !row.Lunch && !row.Dinner && !row.Notes) return;
 
-    // Page break
     if (y + rowHeight > pageHeight - marginY) {
       doc.addPage();
       y = marginY;
@@ -177,7 +171,6 @@ exportBtn.addEventListener("click", () => {
 
     let x = marginX;
 
-    // Day cell (with date)
     let w = colWidthDay;
     doc.rect(x, y, w, rowHeight);
     doc.text(dayName, x + 2, y + 4);
@@ -203,7 +196,6 @@ exportBtn.addEventListener("click", () => {
     y += rowHeight;
   });
 
-  // ---- Grocery list page(s) ----
   let groceryItems = buildGroceryList(saved);
 
   if (groceryItems.length) {
@@ -236,7 +228,6 @@ function buildGroceryList(saved) {
 
   let counts = new Map();
 
-  // units we will ignore (we only care about item name)
   let measurementUnits = new Set([
     "g",
     "gram",
@@ -257,7 +248,7 @@ function buildGroceryList(saved) {
   ]);
 
   Object.keys(saved).forEach((key) => {
-    if (key.endsWith("-Notes")) return; // ignore notes
+    if (key.endsWith("-Notes")) return;
 
     let entry = saved[key];
     if (!entry) return;
@@ -271,7 +262,6 @@ function buildGroceryList(saved) {
     recipe.ingredients.forEach((rawIng) => {
       if (!rawIng) return;
 
-      // Ingredient string
       let ingStr =
         typeof rawIng === "string"
           ? rawIng
@@ -280,13 +270,11 @@ function buildGroceryList(saved) {
 
       let s = ingStr.toLowerCase();
 
-      // remove (...) and commas
       s = s.replace(/\([^)]*\)/g, "").replace(/,/g, " ").trim();
 
       let qty = 1;
       let namePart = s;
 
-      // pattern: "2 cup rice", "200 g chicken"
       let m = s.match(/^(\d+(?:\.\d+)?)\s+([a-z]+)\s+(.*)$/);
       if (m) {
         let num = parseFloat(m[1]);
@@ -294,11 +282,9 @@ function buildGroceryList(saved) {
         let rest = m[3];
         let isMeasureUnit = measurementUnits.has(unit.replace(/s$/, ""));
 
-        // if it's a measurement unit (g/ml/cup/...), treat as "1 portion per recipe"
         qty = isMeasureUnit || isNaN(num) ? 1 : num;
         namePart = rest;
       } else {
-        // pattern: "1 onion", "2 tomatoes"
         let m2 = s.match(/^(\d+(?:\.\d+)?)\s+(.*)$/);
         if (m2) {
           let num = parseFloat(m2[1]);
@@ -307,7 +293,6 @@ function buildGroceryList(saved) {
         }
       }
 
-      // drop leading adjectives: "large onion" -> "onion"
       let words = namePart.split(/\s+/);
       let adjectives = new Set([
         "small",
@@ -323,7 +308,7 @@ function buildGroceryList(saved) {
         words.shift();
       }
 
-      let name = words.join(" ").trim(); // final ingredient name (no units)
+      let name = words.join(" ").trim();
       if (!name) return;
 
       let current = counts.get(name) || 0;
@@ -338,14 +323,12 @@ function buildGroceryList(saved) {
     if (rounded === 1) {
       result.push(`1 ${name}`);
     } else {
-      // simple plural
       let pluralName = name;
       if (!pluralName.endsWith("s")) pluralName += "s";
       result.push(`${rounded} ${pluralName}`);
     }
   }
 
-  // sort alphabetically
   return result.sort((a, b) => a.localeCompare(b));
 }
 
@@ -377,28 +360,12 @@ function renderRecipeCard(meal) {
   `;
 }
 
-
-function currentUserId() {
-  let id = sessionStorage.getItem("userId");
-  return id || "anonymous";
-}
-
-function getMyRecipesKey() {
-  return `${currentUserId()}: MyRecipes`;
-}
-
 function getUserMyRecipes() {
-  try {
-    let raw = localStorage.getItem(getMyRecipesKey());
-    if (!raw) return [];
-    let parsed = JSON.parse(raw);
+    let id = sessionStorage.getItem("userId");
+    let currentUserId=id || "anonymous"
+    let parsed = JSON.parse(localStorage.getItem(`${currentUserId}: MyRecipes`)) || [];
     return Array.isArray(parsed) ? parsed : [];
-  } catch (e) {
-    console.error("Error parsing MyRecipes from localStorage", e);
-    return [];
-  }
 }
-
 
 function fetchAllRecipes() {
   fetch("../js/data.json")
@@ -442,7 +409,7 @@ function renderLayout() {
 
   setSlotListeners();
   loadSavedMeals();
-  
+
 }
 
 searchInput.addEventListener("input", () => {
@@ -473,7 +440,6 @@ function attachRecipeClickListeners() {
       let mealName = recipeDiv.dataset.name;
       let mealImage = recipeDiv.dataset.image;
 
-      // Find full recipe object so we can keep its ingredients
       let selectedRecipe = recipes?.find((r) => r.name === mealName);
 
       let openSection = document.querySelector("section.day-section.active-slot");
@@ -488,7 +454,6 @@ function attachRecipeClickListeners() {
       let mealData = {
         name: mealName,
         image: mealImage,
-        ingredients: selectedRecipe?.ingredients || []
       };
 
       saveMeal(day, mealType, mealData);
