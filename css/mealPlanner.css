@@ -61,7 +61,7 @@ body>h1::after {
 .generate-plan-btn,
 .clear-plan-btn,
 .export-plan-btn {
-   font-family: 'Diella-Regular';
+  font-family: 'Diella-Regular';
   font-weight: 600;
 }
 
@@ -78,7 +78,7 @@ body>h1::after {
 
 /* Meal labels (Breakfast, Lunch, Dinner) */
 .meal-label {
-   font-family: 'Diella-Regular';
+  font-family: 'Diella-Regular';
   font-weight: 600;
 }
 
