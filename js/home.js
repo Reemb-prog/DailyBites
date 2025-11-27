@@ -16,8 +16,6 @@ function closeModal() {
 }
 
 function open(planName, price) {
-            console.log("openmod")
-
     lastFocusedElement = document.activeElement;
 
     modalTitle.textContent = 'Subscribe to ' + planName;
