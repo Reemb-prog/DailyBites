@@ -7,9 +7,9 @@
     --ring: #e2e8f0;
     --bg: #ffffff;
     --light: #f8fafc;
-    --peach-bg: #fff7ed;
+    --peach-bg: #f2f8f1;
     --peach-accent: #fb923c;
-    --sky-bg: #ecfeff;
+    --sky-bg: #ecfff3;
     --sky-accent: #38bdf8;
     --rose-bg: #fff1f2;
     --rose-accent: #fb7185;
@@ -94,7 +94,7 @@
   }
 
   .approach-section {
-    background: #f0fdf4;
+    background: var(--mint);
     padding: 64px 4%;
     border-top: 1px solid #dcfce7;
     border-bottom: 1px solid #dcfce7;
@@ -149,8 +149,8 @@
     align-items: center;
     padding: 64px 4%;
     background: var(--peach-bg);
-    border-top: 1px solid #fed7aa;
-    border-bottom: 1px solid #fed7aa;
+    border-top: 1px solid #fbe5cb;
+    border-bottom: 1px solid #fbe5cb;
   }
 
   .problem-img {
@@ -244,7 +244,7 @@
 
   .subs {
     padding: 64px 4%;
-    background: var(--sky-bg);
+    background: var(--peach-bg);
     border-top: 1px solid #bae6fd;
     border-bottom: 1px solid #bae6fd;
     height: 90vh;
@@ -310,7 +310,7 @@
 
   .audience-section {
     padding: 64px 4%;
-    background: var(--rose-bg);
+    background: var(--mint);
     border-top: 1px solid #fecdd3;
     border-bottom: 1px solid #fecdd3;
     height: 100vh;
@@ -330,7 +330,7 @@
     border: 1px solid #fecdd3;
     border-radius: 14px;
     padding: 18px;
-    box-shadow: 0 10px 22px rgba(251, 113, 133, .12);
+    box-shadow: 0 10px 22px rgba(69, 187, 89, 0.12);
     position: relative;
     overflow: hidden;
   }
@@ -491,6 +491,7 @@
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.8s ease, transform 0.8s ease;
+    font-family: 'Playfair Display', Georgia, serif;
   }
 
   .text-reveal.active {
