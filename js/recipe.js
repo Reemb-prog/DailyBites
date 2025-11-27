@@ -41,7 +41,7 @@ function currentUserId() {
 let curId = currentUserId()
 
 let KEY = `${curId}: favorites`
-let anotherKey = `${curId}: ealPlanner`
+let anotherKey = `${curId}: MealPlanner`
 
 // Enhanced save favorites with validation
 function saveFavorites() {
