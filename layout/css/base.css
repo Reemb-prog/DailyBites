@@ -306,7 +306,7 @@ nav .btn {
 
 @font-face {
   font-family: 'Diella-Regular';
-  src: url('../../fonts/Diella-Regular.woff2') format('woff2');
+  src: url('../../assets/Diella-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
