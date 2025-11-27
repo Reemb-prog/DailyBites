@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../layout/css/base.css">
     <link rel="stylesheet" href="../css/recipe.css">
-    <script  src="../layout/js/inject.js" defer></script>
+    <script src="../layout/js/inject.js" defer></script>
     <script type="module" src="../js/recipe.js" defer></script>
 </head>
 
@@ -65,24 +65,29 @@
 
 
             <!-- Filter Summary -->
-            <section class="filter-summary">
-                <span class="icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
-                    </svg>
-                </span>
-                <span id="filterCount">0 filters applied</span>
-            </section>
 
-            <!-- Replace the filter-actions section with this -->
+
+            <!-- Replace your entire filter-actions section with this -->
             <section class="filter-actions" id="filterActions" style="display: none;">
-                <button id="clearFilters" class="clear-filters-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                    Clear All Filters
-                </button>
+                <div class="filter-summary-row">
+                    <section class="filter-summary">
+                        <span class="icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#475569"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
+                            </svg>
+                        </span>
+                        <span id="filterCount">0 filters applied</span>
+                    </section>
+
+                    <button id="clearFilters" class="clear-filters-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"></path>
+                        </svg>
+                        Clear All Filters
+                    </button>
+                </div>
             </section>
 
         </section>
