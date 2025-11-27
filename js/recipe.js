@@ -40,21 +40,8 @@ function currentUserId() {
 
 let curId = currentUserId()
 
-async function getUser(userid) {
-  let res = await fetch("../js/data.json");
-  let data = await res.json();
-
-  let users = data.users || [];
-  let user  = users.find(u => String(u.id) === String(userid));
-
-  return user?.username || userid;
-}
-let KEY;
-let anotherKey;
-getUser(curId).then(username => {
-  KEY = `${username}: favorites`
-  anotherKey =  `${username}: MealPlanner`
-});
+let KEY = `${curId}: favorites`
+let anotherKey = `${curId}: ealPlanner`
 
 // Enhanced save favorites with validation
 function saveFavorites() {
