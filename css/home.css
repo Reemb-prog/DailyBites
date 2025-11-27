@@ -1,18 +1,18 @@
 :root {
-  --main-color: #f0fdf4;     /* Emerald 50 */
-  --secondary-color: #059669; /* Emerald 600 */
-  --third-color: #ecfdf5;    /* Emerald 50 */
-  --green: #059669;          /* Emerald 600 */
-  --green-700: #047857;      /* Emerald 700 */
-  --ink: #0f172a;            /* Slate 900 */
-  --muted: #475569;          /* Slate 600 */
-  --ring: #86efac;           /* Emerald 300 */
-  --bg: #ffffff;             /* White */
-  --light: #f0fdf4;          /* Emerald 50 */
-  --logo: #059669;           /* Emerald 600 */
-  --txt: #0f172a;            /* Slate 900 */
-  --line: #86efac;           /* Emerald 300 */
-}
+  --main-color: #f0fdf4;     
+  --secondary-color: #059669; 
+  --third-color: #ecfdf5;    
+  --green: #059669;         
+  --green-700: #047857;    
+  --ink: #0f172a;          
+  --muted: #475569;        
+  --ring: #86efac;         
+  --bg: #ffffff;           
+  --light: #f0fdf4;        
+  --logo: #059669;         
+  --txt: #0f172a;          
+  --line: #86efac;   
+}      
 
 body {
     margin: 0;
@@ -37,7 +37,6 @@ h1, h2, h3 {
     margin: 0 0 12px;
 }
 
-/* ===== UTILITY CLASSES ===== */
 .wrap {
     max-width: clamp(1040px, 92vw, 1320px);
     margin: 0 auto;
@@ -79,7 +78,6 @@ h1, h2, h3 {
     border: 2px solid #fff;
 }
 
-/* ===== HERO SECTION ===== */
 #home {
     color: #fff;
     background:
@@ -165,7 +163,6 @@ main > section {
     margin-bottom: 25px;
 }
 
-/* ===== SCROLL ANIMATIONS ===== */
 .feature, .step, .tcard, .subs .plan, .stat {
     opacity: 0;
     transform: translateY(60px);
@@ -204,16 +201,6 @@ main > section {
 .stats-row .stat:nth-child(3).visible { transition-delay: 0.3s; }
 .stats-row .stat:nth-child(4).visible { transition-delay: 0.4s; }
 
-/* Reset delays when hidden */
-.feature:not(.visible), 
-.step:not(.visible), 
-.tcard:not(.visible), 
-.subs .plan:not(.visible),
-.stat:not(.visible) {
-    transition-delay: 0s !important;
-}
-
-/* ===== FEATURES SECTION ===== */
 .features {
     background: #f8fafc;
     text-align: center;
@@ -268,7 +255,7 @@ main > section {
     line-height: 1.6;
 }
 
-.icon {
+.icon, .num {
     width: 40px;
     height: 40px;
     border-radius: 1000px;
@@ -283,7 +270,10 @@ main > section {
     transition: all 0.3s ease;
 }
 
-/* ===== STATS SECTION ===== */
+.num {
+    margin: 0 auto 10px;
+}
+
 .stats {
     background: var(--logo);
     color: #fff;
@@ -322,7 +312,6 @@ main > section {
     letter-spacing: 0.03em;
 }
 
-/* ===== HOW IT WORKS SECTION ===== */
 .how {
     padding: 40px 0;
     text-align: center;
@@ -359,21 +348,6 @@ main > section {
     font-size: 1.1em;
 }
 
-.num {
-    width: 45px;
-    height: 45px;
-    border-radius: 1000px;
-    background: #d1fae5;
-    color: #065f46;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    margin: 0 auto 10px;
-    transition: all 0.3s ease;
-}
-
-/* ===== SUBSCRIPTION SECTION ===== */
 .subs {
     padding: 56px 0;
     background: #f9fafb;
@@ -424,7 +398,6 @@ main > section {
     color: var(--muted);
 }
 
-/* ===== COMPACT SUBSCRIPTION CARDS ===== */
 .subs .plans {
     max-width: 1120px;
     margin: 32px auto 0;
@@ -539,7 +512,6 @@ main > section {
     box-shadow: 0 6px 16px rgba(52, 211, 153, 0.35);
 }
 
-/* Plan-specific accent colors */
 .subs .plan:nth-child(1)::before {
     background: linear-gradient(90deg, #22c55e, #16a34a);
 }
@@ -552,7 +524,6 @@ main > section {
     background: linear-gradient(90deg, #22c55e, #16a34a);
 }
 
-/* Popular plan highlight */
 .subs .plan:nth-child(2) {
     border: 1.5px solid #0ea5e9;
     transform: scale(1.02);
@@ -572,7 +543,6 @@ main > section {
     letter-spacing: 0.5px;
 }
 
-/* ===== CTA SECTION ===== */
 .cta-band {
     background: var(--logo);
     color: #fff;
@@ -609,10 +579,10 @@ main > section {
     flex: 0 0 auto;
 }
 
-/* ===== HOVER EFFECTS ===== */
 .feature.card:hover,
 .step.card:hover,
-.tcard.card:hover {
+.tcard.card:hover,
+.subs .plan:hover {
     transform: translateY(-8px) !important;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
     background-color: #f8fafc;
@@ -647,18 +617,17 @@ main > section {
     opacity: 1;
 }
 
-.subs .plan.highlighted {
+.subs .plan.highlighted,
+.subs .plan.selected {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
     border-color: var(--logo);
 }
 
 .subs .plan.selected {
-    border-color: var(--logo);
     box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2), 0 8px 20px rgba(15, 23, 42, 0.12);
 }
 
-/* ===== MODAL STYLES ===== */
 .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -732,36 +701,6 @@ body.no-scroll {
     overflow: hidden;
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 1024px) {
-    .subs .plans {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-    }
-    
-    .subs .plan:nth-child(2) {
-        transform: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .subs .plans {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        max-width: 400px;
-    }
-    
-    .subs .plan {
-        min-height: auto;
-        padding: 20px 18px;
-    }
-    
-    .subs .plan .price {
-        font-size: 1.6rem;
-    }
-}
-
-/* ===== TESTIMONIALS SECTION ===== */
 .testimonials {
     background: #f8fafc;
     padding: 60px 0;
@@ -811,7 +750,6 @@ body.no-scroll {
     font-weight: 700;
 }
 
-/* Side-by-side testimonial cards */
 .tgrid {
     display: flex;
     gap: 25px;
@@ -946,7 +884,6 @@ body.no-scroll {
     font-size: 0.85em;
 }
 
-/* Trust badges */
 .testimonials-cta {
     margin-top: 40px;
     padding: 30px;
@@ -991,14 +928,20 @@ body.no-scroll {
     font-weight: 600;
 }
 
-/* Responsive design for testimonials */
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
+    .subs .plans {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+    
+    .subs .plan:nth-child(2) {
+        transform: none;
+    }
+    
     .tcard {
         max-width: 350px;
     }
-}
-
-@media (max-width: 1024px) {
+    
     .tgrid {
         gap: 20px;
     }
@@ -1010,6 +953,21 @@ body.no-scroll {
 }
 
 @media (max-width: 768px) {
+    .subs .plans {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        max-width: 400px;
+    }
+    
+    .subs .plan {
+        min-height: auto;
+        padding: 20px 18px;
+    }
+    
+    .subs .plan .price {
+        font-size: 1.6rem;
+    }
+    
     .testimonials {
         padding: 40px 0;
     }

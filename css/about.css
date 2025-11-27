@@ -534,7 +534,6 @@
     100% { transform: translateX(0); }
   }
 
-  /* ===== EXTRA MOBILE-FRIENDLY TWEAKS (only overrides, no core changes) ===== */
   @media (max-width: 980px) {
     .hero {
       padding: 96px 5% 40px;
