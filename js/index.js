@@ -16,6 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // redirect
     setTimeout(function () {
-        window.location.href = "../html/home.html";
+        window.location.href = "./html/home.html";
     }, 3000 + 700); // 700ms matches CSS transition
 });
