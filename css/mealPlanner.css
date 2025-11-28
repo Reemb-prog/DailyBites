@@ -59,35 +59,26 @@ body>h1::after {
 
 /* Button text */
 .generate-plan-btn,
-.clear-plan-btn,
-.export-plan-btn {
+.clear-plan-btn{
   font-family: 'Diella-Regular';
   font-weight: 600;
 }
 
-/* Day names (Monday, Tuesday, etc.) */
 .day-info p:first-child {
   font-family: 'Diella-Regular';
   font-weight: bold;
 }
 
-/* Dates (Nov 24, etc.) */
 .day-info p:nth-child(2) {
   font-family: 'Courier New', Courier, monospace;
 }
-
-/* Meal labels (Breakfast, Lunch, Dinner) */
 .meal-label {
   font-family: 'Diella-Regular';
   font-weight: 600;
 }
-
-/* Body text */
 body {
   font-family: 'Courier New', Courier, monospace;
 }
-
-
 .planner-bar {
   max-width: 1200px;
   margin: 20px auto 10px;
