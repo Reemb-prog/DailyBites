@@ -43,15 +43,58 @@ function getMealPlannerKey() {
   return `${currentUserId}: MealPlanner`
 }
 
-clearBtn.addEventListener("click", () => {
-  let confirmed = confirm("Clear your entire weekly plan?")
+// Simple async confirm using <dialog>
+async function appConfirm(message, okOnly = false) {
+  // create dialog once
+  if (!appConfirm.dialog) {
+    let dlg = document.createElement("dialog")
+    dlg.innerHTML = `
+      <form method="dialog" class="mini-confirm">
+        <p></p>
+        <menu>
+          <button value="cancel">Cancel</button>
+          <button value="ok">OK</button>
+        </menu>
+      </form>
+    `
+    document.body.appendChild(dlg)
+    appConfirm.dialog = dlg
+    appConfirm.text = dlg.querySelector("p")
+    appConfirm.cancelBtn = dlg.querySelector('button[value="cancel"]')
+  }
+
+  appConfirm.text.textContent = message
+  
+    // Show / hide Cancel depending on okOnly
+  if (okOnly) {
+    appConfirm.cancelBtn.style.display = "none"
+  } else {
+    appConfirm.cancelBtn.style.display = ""
+  }
+
+  appConfirm.dialog.showModal()
+
+  return new Promise((resolve) => {
+    appConfirm.dialog.onclose = () => {
+      if (okOnly) {
+        // In alert mode, just resolve true (there is only OK anyway)
+        resolve(true)
+      } else {
+        resolve(appConfirm.dialog.returnValue === "ok")
+      }
+    }
+  })
+}
+
+clearBtn.addEventListener("click", async () => {
+  let confirmed = await appConfirm("Clear your entire weekly plan?")
   if (!confirmed) return
   localStorage.removeItem(getMealPlannerKey())
   renderLayout()
 })
-generateBtn.addEventListener("click", () => {
+generateBtn.addEventListener("click", async () => {
   if (!recipes || !recipes.length) {
-    alert("Recipes are still loading. Try again in a moment.")
+    await appConfirm("Recipes are still loading. Try again in a moment.", true)
     return
   }
 
@@ -76,7 +119,7 @@ generateBtn.addEventListener("click", () => {
   })
 
   if (createdCount === 0) {
-    alert("All meal slots are already filled. Nothing to generate.")
+    await appConfirm("All meal slots are already filled. Nothing to generate.", true)
     return
   }
 
@@ -84,15 +127,15 @@ generateBtn.addEventListener("click", () => {
   loadSavedMeals()
 })
 
-exportBtn.addEventListener("click", () => {
+exportBtn.addEventListener("click", async () => {
   if (!window.jspdf || !window.jspdf.jsPDF) {
-    alert("PDF library (jsPDF) failed to load.")
+    await appConfirm("PDF library (jsPDF) failed to load.", true)
     return
   }
 
   let saved = JSON.parse(localStorage.getItem(getMealPlannerKey()) || "{}")
   if (!Object.keys(saved).length) {
-    alert("You don't have any meals in your plan yet.")
+    await appConfirm("You don't have any meals in your plan yet.", true)
     return
   }
 
@@ -531,7 +574,7 @@ function loadSavedMeals() {
     let parentSlot = mealEl.closest(".meal-slot")
     let body = parentSlot.querySelector(".meal-body")
 
-    mealEl.addEventListener("click", (e) => {
+    mealEl.addEventListener("click", async (e) => {
       e.stopPropagation()
       let section = e.target.closest("section.day-section")
       let day = section.getAttribute("data-day")
@@ -544,7 +587,7 @@ function loadSavedMeals() {
         return
       }
 
-      if (confirm("Remove this recipe?")) {
+      if (await appConfirm("Remove this recipe?")) {
         removeMeal(day, mealType)
         body.innerHTML = `<span class="meal-placeholder">+</span>`
         parentSlot.classList.remove("has-meal")
@@ -653,9 +696,9 @@ function openNoteModal(day) {
     if (e.target.classList.contains("note-modal")) modal.remove()
   })
 
-  saveNote.addEventListener("click", () => {
+  saveNote.addEventListener("click", async () => {
     let note = textarea.value.trim()
-    if (!note) return alert("Please write something!")
+    if (!note) return await appConfirm("Please write something!",true)
     saveMeal(day, "Notes", note)
     modal.remove()
     loadSavedMeals()
