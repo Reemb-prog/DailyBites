@@ -1,5 +1,5 @@
   document.addEventListener('DOMContentLoaded', () => {
-    let navbar = document.getElementById('navbar');
+    let navbar = document.getElementsByTagName('nav')[0];
 
     let onScroll = () => {
       if (window.scrollY > 60) navbar.classList.add('scrolled');
