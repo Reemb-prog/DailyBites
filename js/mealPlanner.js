@@ -43,9 +43,40 @@ function getMealPlannerKey() {
   return `${currentUserId}: MealPlanner`
 }
 
-// Simple async confirm using <dialog>
+let inMemoryPlan = {} 
+
+function isAnonymousUser() {
+  return !sessionStorage.getItem("userId")
+}
+
+function getCurrentPlan() {
+  if (isAnonymousUser()) {
+    let raw = sessionStorage.getItem("AnonMealPlanner")
+    try {
+      return raw ? JSON.parse(raw) : {}
+    } catch (e) {
+      console.error("Bad anon meal plan data, resetting", e)
+      return {}
+    }
+  }
+  let raw = localStorage.getItem(getMealPlannerKey())
+  try {
+    return raw ? JSON.parse(raw) : {}
+  } catch (e) {
+    console.error("Bad meal plan data, resetting", e)
+    return {}
+  }
+}
+
+function setCurrentPlan(plan) {
+  if (isAnonymousUser()) {
+    sessionStorage.setItem("AnonMealPlanner", JSON.stringify(plan))
+  } else {
+    localStorage.setItem(getMealPlannerKey(), JSON.stringify(plan))
+  }
+}
+
 async function appConfirm(message, okOnly = false) {
-  // create dialog once
   if (!appConfirm.dialog) {
     let dlg = document.createElement("dialog")
     dlg.innerHTML = `
@@ -65,7 +96,6 @@ async function appConfirm(message, okOnly = false) {
 
   appConfirm.text.textContent = message
   
-    // Show / hide Cancel depending on okOnly
   if (okOnly) {
     appConfirm.cancelBtn.style.display = "none"
   } else {
@@ -77,7 +107,6 @@ async function appConfirm(message, okOnly = false) {
   return new Promise((resolve) => {
     appConfirm.dialog.onclose = () => {
       if (okOnly) {
-        // In alert mode, just resolve true (there is only OK anyway)
         resolve(true)
       } else {
         resolve(appConfirm.dialog.returnValue === "ok")
@@ -86,7 +115,6 @@ async function appConfirm(message, okOnly = false) {
   })
 }
 
-// --- loading indicator (shown while fetching recipes) ---
 let recipesLoader = document.createElement("div")
 recipesLoader.className = "loading-indicator"
 recipesLoader.innerHTML = `
@@ -103,16 +131,23 @@ function setRecipesLoading(isLoading) {
 clearBtn.addEventListener("click", async () => {
   let confirmed = await appConfirm("Clear your entire weekly plan?")
   if (!confirmed) return
-  localStorage.removeItem(getMealPlannerKey())
+
+  if (isAnonymousUser()) {
+    sessionStorage.removeItem("AnonMealPlanner")
+  } else {
+    localStorage.removeItem(getMealPlannerKey())
+  }
+
   renderLayout()
 })
+
 generateBtn.addEventListener("click", async () => {
   if (!recipes || !recipes.length) {
     await appConfirm("Recipes are still loading. Try again in a moment.", true)
     return
   }
 
-  let plan = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {}
+  let plan = getCurrentPlan()
 
   let sections = document.querySelectorAll("main section.day-section")
   let createdCount = 0
@@ -137,7 +172,7 @@ generateBtn.addEventListener("click", async () => {
     return
   }
 
-  localStorage.setItem(getMealPlannerKey(), JSON.stringify(plan))
+  setCurrentPlan(plan)
   loadSavedMeals()
 })
 
@@ -147,7 +182,7 @@ exportBtn.addEventListener("click", async () => {
     return
   }
 
-  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey()) || "{}")
+  let saved = getCurrentPlan()
   if (!Object.keys(saved).length) {
     await appConfirm("You don't have any meals in your plan yet.", true)
     return
@@ -424,7 +459,6 @@ function renderRecipeCard(meal) {
   `
 }
 
-
 function getUserMyRecipes() {
   let id = sessionStorage.getItem("userId")
   let currentUserId = id || "anonymous"
@@ -542,7 +576,7 @@ function attachRecipeClickListeners() {
 }
 
 function loadSavedMeals() {
-  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {}
+  let saved = getCurrentPlan()
 
   let sections = document.querySelectorAll("main section.day-section")
 
@@ -668,15 +702,15 @@ function setSlotListeners() {
 }
 
 function saveMeal(day, mealType, mealData) {
-  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {}
+  let saved = getCurrentPlan()
   saved[`${day}-${mealType}`] = mealData
-  localStorage.setItem(getMealPlannerKey(), JSON.stringify(saved))
+  setCurrentPlan(saved)
 }
 
 function removeMeal(day, mealType) {
-  let saved = JSON.parse(localStorage.getItem(getMealPlannerKey())) || {}
+  let saved = getCurrentPlan()
   delete saved[`${day}-${mealType}`]
-  localStorage.setItem(getMealPlannerKey(), JSON.stringify(saved))
+  setCurrentPlan(saved)
 }
 
 overlay.addEventListener("click", (e) => {
