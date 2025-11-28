@@ -20,6 +20,7 @@ body {
      url('https://storage.bhs.cloud.ovh.net/v1/AUTH_67da374e12f7497491105aaeeebf4835/public/blog/Meal-Kits-2__3__.jpg');
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
     z-index: 1;
 }
 
@@ -35,6 +36,26 @@ body {
     align-items: center;
     text-align: center;
     z-index: 2;
+    /* Animation initial state */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.text-container.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Shared class for page-level transition (bg + text) */
+.page-transition {
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+/* Fade-out state for smoother page transition */
+.page-transition.fade-out {
+    opacity: 0.5;
+    transform: scale(1); /* tiny zoom for a nice feel */
 }
 
 .welcome-text {
@@ -52,7 +73,6 @@ body {
     font-family: 'Dancing Script', cursive;
     font-weight: 300;
     font-size: 2.2rem;
-
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
     line-height: 1;
     font-style: italic;
@@ -61,23 +81,32 @@ body {
     margin-top: -35px;
 }
 
-/* Responsive adjustments */
+/* Tablet & small laptop */
 @media (max-width: 768px) {
     .welcome-text {
         font-size: 3.5rem;
+        margin-bottom: 6px;
     }
-    
+
     .daily-bites {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
+        margin-top: -10px;
     }
 }
 
+/* Small mobile screens */
 @media (max-width: 480px) {
     .welcome-text {
-        font-size: 2.5rem;
+        font-size: 2.7rem;
+        margin-bottom: 4px;
     }
-    
+
     .daily-bites {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
+        margin-top: -6px;
+    }
+
+    .text-container {
+        padding: 0 1rem; /* keep text away from edges */
     }
 }
