@@ -86,6 +86,20 @@ async function appConfirm(message, okOnly = false) {
   })
 }
 
+// --- loading indicator (shown while fetching recipes) ---
+let recipesLoader = document.createElement("div")
+recipesLoader.className = "loading-indicator"
+recipesLoader.innerHTML = `
+  <span class="spinner"></span>
+  <span>Loading recipes...</span>
+`
+recipesLoader.style.display = "none"
+recipesContainer.parentNode.insertBefore(recipesLoader, recipesContainer)
+
+function setRecipesLoading(isLoading) {
+  recipesLoader.style.display = isLoading ? "flex" : "none"
+}
+
 clearBtn.addEventListener("click", async () => {
   let confirmed = await appConfirm("Clear your entire weekly plan?")
   if (!confirmed) return
@@ -709,18 +723,4 @@ function openNoteModal(day) {
     modal.remove()
     loadSavedMeals()
   })
-}
-
-// --- loading indicator (shown while fetching recipes) ---
-let recipesLoader = document.createElement("div")
-recipesLoader.className = "loading-indicator"
-recipesLoader.innerHTML = `
-  <span class="spinner"></span>
-  <span>Loading recipes...</span>
-`
-recipesLoader.style.display = "none"
-recipesContainer.parentNode.insertBefore(recipesLoader, recipesContainer)
-
-function setRecipesLoading(isLoading) {
-  recipesLoader.style.display = isLoading ? "flex" : "none"
 }
