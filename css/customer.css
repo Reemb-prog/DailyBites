@@ -304,8 +304,8 @@ textarea{
   width: min(680px, calc(100% - 2rem));
   max-height: min(85vh, 900px);
   transform: translate(-50%, -46%) scale(.98);
-  background: var(--surface, #505748);
-  color: var(--text, #f5f5f5);
+  background: #e5ecde;
+  color: var(--ink);
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
   display: grid;

@@ -248,7 +248,7 @@ function render(){
         viewBtn.setAttribute('data-action', 'view')
         viewBtn.setAttribute('data-id', String(r.id))
 
-        viewBtn.addEventListener("click", ()=>{ console.log(r); openModal(r);}) 
+        viewBtn.addEventListener("click", ()=> open(r) ) 
 
         footer.appendChild(viewBtn)
         body.append(h3, meta, p, footer)
@@ -265,7 +265,7 @@ let mDesc = document.getElementById('mDesc')
 let mMeta = document.getElementById('mMeta')
 let mBody = document.querySelector('#modal .modal-body, #modal .content')
 
-function openModal(recipe){
+function open(recipe){
     mTitle.textContent = recipe.name || 'Recipe Details'
     mDesc.textContent  = recipe.description || ''
 
@@ -424,7 +424,7 @@ function createRecipe(){
 
     // id
     let id = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000
-    console.log("added ",id)
+    // console.log("added ",id)
 
     return {
         id,
