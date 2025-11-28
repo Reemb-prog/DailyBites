@@ -393,8 +393,8 @@ function placeholderInitials(s){
 }
 
 // reset
-document.getElementById('resetForm').addEventListener('click', () => {
-    if(confirm("clear all your customized recipes?")){
+document.getElementById('resetForm').addEventListener('click', async () => {
+    if(await appConfirm("clear all your customized recipes?")){
         myRecipes = []
         save()
         render() 
@@ -450,7 +450,7 @@ function createRecipe(){
     }
 }
 
-form.addEventListener('submit', e=>{
+form.addEventListener('submit', async e=>{
     e.preventDefault()
 
     validatableFields.forEach(f => f && validateField(f))
@@ -465,7 +465,7 @@ form.addEventListener('submit', e=>{
     myRecipes.push(recipe)
     save()
     render()
-    confirm('Saved to My Recipes for this user.')
+    await appConfirm('Saved to My Recipes for this user.', true)
 
     form.reset() 
     validatableFields.forEach(f => f && clearFieldError(f))
