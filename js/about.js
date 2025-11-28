@@ -1,40 +1,69 @@
-  document.addEventListener('DOMContentLoaded', () => {
-    let navbar = document.getElementsByTagName('nav')[0];
+function initNavbar() {
+  let navbar = document.querySelector('nav');
+  if (!navbar) return false; // nav not yet injected
 
-    let onScroll = () => {
-      if (window.scrollY > 60) navbar.classList.add('scrolled');
-      else navbar.classList.remove('scrolled');
-    };
+  // Use the actual id from nav.html
+  let toggle = document.getElementById('hamburger');
+  let links = document.querySelector('.nav-links');
 
-    onScroll();
-
-    let toggle = document.getElementById('menu-toggle');
-    window.addEventListener('scroll', onScroll);
-
-    let links = document.querySelector('.nav-links');
-
-    if (toggle && links) {
-      toggle.addEventListener('click', () => {
-        let open = links.classList.toggle('show');
-        toggle.setAttribute('aria-expanded', String(open));
-      });
+  let onScroll = () => {
+    if (window.scrollY > 60) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
     }
+  };
 
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        let id = a.getAttribute('href');
-        let el = document.querySelector(id);
-        if (!el) return;
+  onScroll();
+  window.addEventListener('scroll', onScroll);
 
-        e.preventDefault();
-        let top = el.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight;
-        window.scrollTo({ top, behavior: 'smooth' });
+  if (toggle && links) {
+    toggle.addEventListener('click', () => {
+      let open = links.classList.toggle('show');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+  }
 
+  // Smooth scroll for internal links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      let id = a.getAttribute('href');
+      let el = id && document.querySelector(id);
+      if (!el) return;
+
+      e.preventDefault();
+      let top =
+        el.getBoundingClientRect().top +
+        window.scrollY -
+        (navbar.offsetHeight || 0);
+
+      window.scrollTo({ top, behavior: 'smooth' });
+
+      if (links && toggle) {
         links.classList.remove('show');
         toggle.setAttribute('aria-expanded', 'false');
-      });
+      }
     });
   });
+
+  return true; // successfully initialized
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Try immediately, in case nav was already injected
+  if (initNavbar()) return;
+
+  // Simple retry loop in case nav is injected a bit later
+  let tries = 0;
+  let maxTries = 40; // ~2 seconds if interval is 50ms
+
+  let timer = setInterval(() => {
+    if (initNavbar() || ++tries >= maxTries) {
+      clearInterval(timer);
+    }
+  }, 50);
+});
+
 
   let reveals = document.querySelectorAll('.reveal, .text-reveal');
 
