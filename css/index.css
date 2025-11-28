@@ -22,6 +22,8 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     z-index: 1;
+    /* Add transition here for background */
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .text-container {
@@ -36,26 +38,38 @@ body {
     align-items: center;
     text-align: center;
     z-index: 2;
-    /* Animation initial state */
+    /* Remove transition from here - it conflicts with page-transition */
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
 .text-container.show {
     opacity: 1;
     transform: translateY(0);
+    /* Add transition only for the show state */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
-/* Shared class for page-level transition (bg + text) */
+/* Remove the shared page-transition class transitions */
 .page-transition {
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    /* No transitions here - they're applied individually */
 }
 
-/* Fade-out state for smoother page transition */
+/* Fade-out state with smooth slide-up */
 .page-transition.fade-out {
-    opacity: 0.5;
-    transform: scale(1); /* tiny zoom for a nice feel */
+    opacity: 0;
+    transform: translateY(-40px);
+}
+
+.background-container.fade-out {
+    opacity: 0;
+    transform: translateY(-40px);
+}
+
+.text-container.fade-out {
+    opacity: 0;
+    transform: translateY(-40px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .welcome-text {
@@ -77,7 +91,7 @@ body {
     line-height: 1;
     font-style: italic;
     color: beige;
-    filter: none !important; /* Ensure no blur on text */
+    filter: none !important;
     margin-top: -35px;
 }
 
@@ -107,6 +121,6 @@ body {
     }
 
     .text-container {
-        padding: 0 1rem; /* keep text away from edges */
+        padding: 0 1rem;
     }
 }
