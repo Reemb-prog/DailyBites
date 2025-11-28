@@ -467,6 +467,8 @@ function displayRecipes() {
             }
 
             saveFavorites();
+            let filterbyfav = document.getElementById("favoriteFilter").classList.contains("active")
+            if (filterbyfav) displayRecipes()
         });
 
         recipesContainer.appendChild(recipeCard);
