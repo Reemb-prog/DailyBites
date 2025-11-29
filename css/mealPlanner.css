@@ -59,7 +59,8 @@ body>h1::after {
 
 /* Button text */
 .generate-plan-btn,
-.clear-plan-btn{
+.clear-plan-btn,
+.export-plan-btn{
   font-family: 'Diella-Regular';
   font-weight: 600;
 }
