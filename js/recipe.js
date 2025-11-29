@@ -234,9 +234,10 @@ function saveMealToPlanner(day, mealType, recipe) {
     showNotification('Added "' + recipe.name + '" to ' + day + ' ' + mealType, "success");
 }
 
-function openAddToPlanModal(recipe) {
+async function openAddToPlanModal(recipe) {
     if (isAnonymousUser()) {
-        async () => await appConfirm("please login to add to plan.")
+        let confiremd = await appConfirm("please login to add to plan."); 
+        if (confiremd) window.location.href = "../html/auth.html";
         return
     }
 
