@@ -209,6 +209,10 @@ function createStarRating(rating) {
 let plannerDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 let plannerMealTypes = ["Breakfast", "Lunch", "Dinner"];
 
+function isAnonymousUser() {
+  return !sessionStorage.getItem("userId")
+}
+
 function saveMealToPlanner(day, mealType, recipe) {
     let plan = JSON.parse(localStorage.getItem(getStorageKey('MealPlanner')) || "{}");
     let key = day + '-' + mealType;
@@ -231,6 +235,11 @@ function saveMealToPlanner(day, mealType, recipe) {
 }
 
 function openAddToPlanModal(recipe) {
+    if (isAnonymousUser()) {
+        async () => await appConfirm("please login to add to plan.")
+        return
+    }
+
     document.querySelectorAll(".add-plan-modal-backdrop").forEach(m => m.remove());
 
     let backdrop = document.createElement("div");

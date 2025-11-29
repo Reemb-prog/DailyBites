@@ -76,45 +76,6 @@ function setCurrentPlan(plan) {
   }
 }
 
-async function appConfirm(message, okOnly = false) {
-  if (!appConfirm.dialog) {
-    let dlg = document.createElement("dialog")
-    dlg.innerHTML = `
-      <form method="dialog" class="mini-confirm">
-        <p></p>
-        <menu>
-          <button value="cancel">Cancel</button>
-          <button value="ok">OK</button>
-        </menu>
-      </form>
-    `
-    document.body.appendChild(dlg)
-    appConfirm.dialog = dlg
-    appConfirm.text = dlg.querySelector("p")
-    appConfirm.cancelBtn = dlg.querySelector('button[value="cancel"]')
-  }
-
-  appConfirm.text.textContent = message
-  
-  if (okOnly) {
-    appConfirm.cancelBtn.style.display = "none"
-  } else {
-    appConfirm.cancelBtn.style.display = ""
-  }
-
-  appConfirm.dialog.showModal()
-
-  return new Promise((resolve) => {
-    appConfirm.dialog.onclose = () => {
-      if (okOnly) {
-        resolve(true)
-      } else {
-        resolve(appConfirm.dialog.returnValue === "ok")
-      }
-    }
-  })
-}
-
 let recipesLoader = document.createElement("div")
 recipesLoader.className = "loading-indicator"
 recipesLoader.innerHTML = `
