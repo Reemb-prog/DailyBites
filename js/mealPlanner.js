@@ -40,7 +40,7 @@ let exportBtn = document.getElementById("export-plan")
 function getMealPlannerKey() {
   let id = sessionStorage.getItem("userId")
   let currentUserId = id || "anonymous"
-  return `${currentUserId}: MealPlanner`
+  return `${currentUserId}:MealPlanner`
 }
 
 let inMemoryPlan = {} 
@@ -51,7 +51,7 @@ function isAnonymousUser() {
 
 function getCurrentPlan() {
   if (isAnonymousUser()) {
-    let raw = sessionStorage.getItem("AnonMealPlanner")
+    let raw = sessionStorage.getItem("anonymous:MealPlanner")
     try {
       return raw ? JSON.parse(raw) : {}
     } catch (e) {
@@ -70,7 +70,7 @@ function getCurrentPlan() {
 
 function setCurrentPlan(plan) {
   if (isAnonymousUser()) {
-    sessionStorage.setItem("AnonMealPlanner", JSON.stringify(plan))
+    sessionStorage.setItem("anonymous:MealPlanner", JSON.stringify(plan))
   } else {
     localStorage.setItem(getMealPlannerKey(), JSON.stringify(plan))
   }
@@ -133,7 +133,7 @@ clearBtn.addEventListener("click", async () => {
   if (!confirmed) return
 
   if (isAnonymousUser()) {
-    sessionStorage.removeItem("AnonMealPlanner")
+    sessionStorage.removeItem("anonymous:MealPlanner")
   } else {
     localStorage.removeItem(getMealPlannerKey())
   }
