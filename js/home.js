@@ -55,6 +55,11 @@ function open(planName, price) {
     emailInput.focus()
 }
 
+document.querySelector(".emailbox").addEventListener("submit", async e =>{
+    e.preventDefault()
+    await appConfirm('Thanks for joining us! you will recieve latest news.', true)
+})
+
 // opne modal on subscription buttons
 document.querySelectorAll('.subs .plan .btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
