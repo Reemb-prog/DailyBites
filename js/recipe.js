@@ -11,7 +11,6 @@ let currentFilters = {
     favoritesOnly: false
 }
 
-// loading indicator for recipes page 
 let recipesList = document.getElementById("recipes")
 let recipesLoader = document.createElement("div")
 recipesLoader.className = "loading-indicator"
@@ -375,7 +374,6 @@ function displayRecipes() {
             }
         })
 
-        // Show 2 tags on mobile, 3 on larger screens
         let isMobile = window.matchMedia("(max-width: 640px)").matches
         // console.log(isMobile)
         let maxVisibleTags = isMobile ? 2 : 3
