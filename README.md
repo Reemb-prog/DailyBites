@@ -153,6 +153,6 @@ npm run build
 
 ## Authors
 
-- Reem W. Basho – 20240020
+- Reem W. Basho – 20240020 (integrating now react and django)
 - Aya Hajjaoui – 20240263
 - Hussein Ghaddar – 20240125
