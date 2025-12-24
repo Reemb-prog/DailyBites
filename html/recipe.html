@@ -11,12 +11,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="stylesheet" href="../layout/css/base.css">
     <link rel="stylesheet" href="../css/recipe.css">
-    <script src="../layout/js/inject.js" defer></script>
-    <script type="module" src="../js/recipe.js" defer></script>
 </head>
 
 <body>
     <div data-include="nav"></div>
+
+    <!-- Original recipe page structure with all CSS classes -->
     <main>
 
         <section class="filters">
@@ -215,6 +215,8 @@
         <section id="tagDialogContent"></section>
     </dialog>
     <div data-include="footer"></div>
+    <script type="module" src="../js/recipe.js"></script>
+    <script type="module" src="../js/reactMount.jsx"></script>
 </body>
 
 </html>

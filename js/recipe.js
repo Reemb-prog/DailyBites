@@ -33,8 +33,8 @@ async function initializeApp() {
         console.log('Loaded recipes:', allRecipes.length)
         setupFilters()
         displayRecipes()
-        showNotification('Recipes loaded successfully!', 'success')
-    } catch (error) {
+        // showNotification('Recipes loaded successfully!', 'success')
+        //     } catch (error) {
         console.error('Failed to initialize app:', error)
         showNotification('Failed to load recipes', 'error')
     } finally {
